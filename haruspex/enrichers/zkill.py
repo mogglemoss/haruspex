@@ -9,7 +9,7 @@ import httpx
 ZKILL = "https://zkillboard.com/api"
 HEADERS = {
     "Accept-Encoding": "gzip",
-    "User-Agent": "lazyscan/0.1 github.com/mogglemoss/lazyscan",
+    "User-Agent": "haruspex/0.1 github.com/mogglemoss/haruspex",
 }
 
 # Known wormhole corps/alliances to flag (name fragments, case-insensitive)
@@ -91,14 +91,16 @@ async def fetch_all(character_ids: list[int]) -> dict[int, ZkillStats]:
     }
 
 
-def is_wh_corp(corp_name: str) -> bool:
+def is_wh_corp(corp_name: str, extra: set[str] | None = None) -> bool:
     low = corp_name.lower()
-    return any(wh in low for wh in WH_CORPS)
+    corpus = WH_CORPS | (extra or set())
+    return any(wh in low for wh in corpus)
 
 
-def is_wh_alliance(alliance_name: str) -> bool:
+def is_wh_alliance(alliance_name: str, extra: set[str] | None = None) -> bool:
     low = alliance_name.lower()
-    return any(wh in low for wh in WH_ALLIANCES)
+    corpus = WH_ALLIANCES | (extra or set())
+    return any(wh in low for wh in corpus)
 
 
 def is_wingspan(corp_name: str, alliance_name: str) -> bool:

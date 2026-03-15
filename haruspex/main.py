@@ -11,6 +11,7 @@ from haruspex.ui.widgets import HaruspexHeader, PasteArea
 
 from haruspex.config.settings import Config
 from haruspex.ui.dscan_panel import DscanPanel
+from haruspex.ui.help_screen import HelpScreen
 from haruspex.ui.local_panel import LocalPanel
 from haruspex.ui.log_panel import LogPanel
 
@@ -134,6 +135,8 @@ class LazyScanApp(App):
         Binding("l", "focus_panel('local')", "Local", show=True, priority=True),
         Binding("m", "focus_panel('log')", "Monitoring", show=True, priority=True),
         Binding("escape", "exit_fullscreen", "Overview", show=True, priority=True),
+        Binding("c", "copy_overview", "Copy intel", show=True, priority=True),
+        Binding("question_mark", "show_help", "Help", show=True),
         Binding("q", "quit", "Quit", show=True),
     ]
 
@@ -142,7 +145,7 @@ class LazyScanApp(App):
         yield HaruspexHeader()
         with Horizontal(id="panels"):
             yield DscanPanel(id="panel-dscan")
-            yield LocalPanel(id="panel-local")
+            yield LocalPanel(config=self._config, id="panel-local")
             yield LogPanel(config=self._config, id="panel-log")
         yield Footer()
 
@@ -159,11 +162,27 @@ class LazyScanApp(App):
     def check_action(self, action: str, parameters: tuple) -> bool | None:
         if action == "exit_fullscreen":
             return True if self._fullscreen else None  # None = hide from footer
+        if action == "copy_overview":
+            return None if self._fullscreen else True  # hide in detail (panels handle c)
         return True
 
     def action_exit_fullscreen(self) -> None:
         if self._fullscreen:
             self._set_overview()
+
+    def action_copy_overview(self) -> None:
+        parts = []
+        for panel_id in ("dscan", "local", "log"):
+            panel = self.query_one(f"#panel-{panel_id}")
+            if hasattr(panel, "_copy_text"):
+                text = panel._copy_text()
+                if text:
+                    parts.append(text)
+        if parts:
+            self.copy_to_clipboard("  ||  ".join(parts))
+
+    def action_show_help(self) -> None:
+        self.push_screen(HelpScreen())
 
     def _set_fullscreen(self, panel_id: str) -> None:
         self._fullscreen = panel_id

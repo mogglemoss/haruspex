@@ -23,4 +23,5 @@ build-backend = "hatchling.build"
 dev = [
     "hatchling>=1.29.0",
     "pytest>=9.0.2",
+    "pyinstaller>=6.0",
 ]

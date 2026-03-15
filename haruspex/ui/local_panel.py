@@ -54,6 +54,10 @@ def _sort_key(col: int, row: tuple) -> object:
 class LocalPanel(Static):
     """Local intel mode: paste roster → ESI + zKillboard lookup."""
 
+    def __init__(self, config=None, **kwargs):
+        super().__init__(**kwargs)
+        self._config = config
+
     BINDINGS = [
         Binding("ctrl+g", "lookup", "Look up", show=False, priority=True),
         Binding("c", "copy_intel", "Copy intel", show=True, priority=True),
@@ -266,8 +270,12 @@ class LocalPanel(Static):
 
             for r in flagged[:max(1, pilot_slots)]:
                 name, _, _, kills, _, _, risk, tags = r
-                tag_str = f"  [{strip_markup(tags)}]" if tags != "-" else ""
-                lines.append(f"  [bold]{name}[/bold]{tag_str}  {risk}  [#7a756e]{kills}k[/#7a756e]")
+                tag_str = f"  [#7a756e]{strip_markup(tags)}[/#7a756e]" if tags != "-" else ""
+                if "☠" in risk:
+                    lines.append(f"  [bold #ff6b6b]☠[/bold #ff6b6b] [bold]{name}[/bold]{tag_str}  [#7a756e]{kills} kills[/#7a756e]")
+                else:
+                    pct = strip_markup(risk)
+                    lines.append(f"  [bold]{name}[/bold]{tag_str}  [#e8a559]{pct} danger[/#e8a559]  [#7a756e]{kills} kills[/#7a756e]")
 
             remaining = len(flagged) - min(len(flagged), max(1, pilot_slots))
             if remaining > 0:
@@ -369,12 +377,14 @@ class LocalPanel(Static):
                 else:
                     danger = f"{danger_pct}%"
 
+                extra_corps = set(self._config.logs.wh_corps) if self._config else None
+                extra_alliances = set(self._config.logs.wh_alliances) if self._config else None
                 tags: list[str] = []
                 if zkill.is_wingspan(info.corp_name, info.alliance_name):
                     tags.append("[#c47ab4]WINGSPAN[/#c47ab4]")
-                elif zkill.is_wh_corp(info.corp_name):
+                elif zkill.is_wh_corp(info.corp_name, extra_corps):
                     tags.append("[#4ec9c4]WH[/#4ec9c4]")
-                elif zkill.is_wh_alliance(info.alliance_name):
+                elif zkill.is_wh_alliance(info.alliance_name, extra_alliances):
                     tags.append("[#4ec9c4]WH[/#4ec9c4]")
                 if zs and zs.error:
                     tags.append("[#5a5550]no zkill[/#5a5550]")
@@ -437,9 +447,9 @@ class LocalPanel(Static):
     def _set_status(self, msg: str) -> None:
         self.query_one("#local-status", Static).update(msg)
 
-    def action_copy_intel(self) -> None:
+    def _copy_text(self) -> str | None:
         if not self._rows:
-            return
+            return None
         system = _system_from_app(self.app)
         flagged = [r for r in self._rows if "☠" in r[6] or ("%" in r[6] and _risk_val(r[6]) >= 30)]
         lines = [f"local{' · ' + system if system else ''} · {len(self._rows)} pilots"]
@@ -447,11 +457,19 @@ class LocalPanel(Static):
             pilot_strs = []
             for r in flagged:
                 name, _, _, kills, _, _, risk, tags = r
-                tag_str = f" [{tags}]" if tags != "-" else ""
-                pilot_strs.append(f"{name}{tag_str} {risk} {kills}k")
+                tag_str = f" [{strip_markup(tags)}]" if tags != "-" else ""
+                risk_clean = strip_markup(risk)
+                risk_label = "☠" if "☠" in risk else f"{risk_clean} danger"
+                pilot_strs.append(f"{name}{tag_str} {risk_label} {kills} kills")
             lines.append("flagged: " + " · ".join(pilot_strs))
         else:
             lines.append("no flagged pilots")
-        self.app.copy_to_clipboard(strip_markup("  |  ".join(lines)))
+        return "  |  ".join(lines)
+
+    def action_copy_intel(self) -> None:
+        text = self._copy_text()
+        if not text:
+            return
+        self.app.copy_to_clipboard(text)
         self._set_status("[#7a756e]copied ✓[/#7a756e]")
         self.set_timer(2.0, lambda: self._set_status(""))

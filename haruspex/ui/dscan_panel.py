@@ -292,10 +292,10 @@ class DscanPanel(Static):
         self.query_one("#results-label", Label).update("proximity assessment")
         self._refresh_summary()
 
-    def action_copy_result(self) -> None:
+    def _copy_text(self) -> str | None:
         r = self._last_result
         if not r:
-            return
+            return None
         system = _system_from_app(self.app)
         parts = [f"d-scan{' · ' + system if system else ''}"]
         cls_parts = []
@@ -312,7 +312,13 @@ class DscanPanel(Static):
             parts.append(f"notable: {notable_str}")
         for _, label, text in r.assessments:
             parts.append(f"{label}: {text}" if label != "threat" else text)
-        self.app.copy_to_clipboard(strip_markup("  |  ".join(parts)))
+        return strip_markup("  |  ".join(parts))
+
+    def action_copy_result(self) -> None:
+        text = self._copy_text()
+        if not text:
+            return
+        self.app.copy_to_clipboard(text)
         label = self.query_one("#results-label", Label)
         original = label.renderable
         label.update("[dim]copied ✓[/dim]")

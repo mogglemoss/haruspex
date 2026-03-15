@@ -61,9 +61,6 @@ lazyscan/
 ### Phase 3 — Live log tail
 - Watch ~/Documents/EVE/logs/Chatlogs/Local_*.txt in real time (UTF-16LE)
 - Auto-trigger ESI+zKillboard lookup when new pilot appears in local
-- Combat log parsing: ~/Documents/EVE/logs/Gamelogs/*.txt
-  - Per-session damage dealt/received, kills, losses
-- Intel channel monitor: watch configured channel logs for system name mentions
 
 ## Data sources
 
@@ -132,7 +129,7 @@ Covert ops / hunters: Stratios, Astero, Helios, Buzzard, Cheetah, Anathema, Imic
 - Developer: Scott (mogglemoss on GitHub)
 - Related projects: ShortCircuit (EVE wormhole nav tool, Python/PyQt)
 - EVE character: Cormorant Fell (WiNGSPAN alumni, wormhole space)
-- Repo: github.com/mogglemoss/lazyscan (create when ready)
+- Repo: github.com/mogglemoss/haruspex (create when ready)
 - Build on MacBook (Cloud-Machine), run alongside EVE client
 
 ## Starting point

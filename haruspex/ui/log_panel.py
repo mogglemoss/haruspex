@@ -173,8 +173,19 @@ class LogPanel(Static):
         if self.has_class("overview"):
             self._refresh_summary()
 
+    def on_data_table_header_selected(self, event: DataTable.HeaderSelected) -> None:
+        col = event.column_index
+        if self._sort_col == col:
+            self._sort_asc = not self._sort_asc
+        else:
+            self._sort_col = col
+            self._sort_asc = col in (0, 1, 2, 7)
+        self._render_rows()
+
     def on_mount(self) -> None:
         self._rows: dict[str, tuple] = {}
+        self._sort_col: int = 6   # default: Risk
+        self._sort_asc: bool = False
         table = self.query_one("#log-table", DataTable)
         table.add_columns(*COLUMNS)
         table.display = False
@@ -242,7 +253,13 @@ class LogPanel(Static):
                     name = r[0]
                     risk = r[6]
                     kills = r[3]
-                    lines.append(f"  [bold]{name}[/bold]  {risk}  [#7a756e]{kills}k[/#7a756e]")
+                    tags = r[7]
+                    tag_str = f"  [#7a756e]{strip_markup(tags)}[/#7a756e]" if tags != "-" else ""
+                    if "☠" in risk:
+                        lines.append(f"  [bold #ff6b6b]☠[/bold #ff6b6b] [bold]{name}[/bold]{tag_str}  [#7a756e]{kills} kills[/#7a756e]")
+                    else:
+                        pct = strip_markup(risk)
+                        lines.append(f"  [bold]{name}[/bold]{tag_str}  [#e8a559]{pct} danger[/#e8a559]  [#7a756e]{kills} kills[/#7a756e]")
 
                 remaining = len(flagged) - min(len(flagged), max(1, pilot_slots))
                 if remaining > 0:
@@ -387,12 +404,14 @@ class LogPanel(Static):
         else:
             danger = f"{danger_pct}%"
 
+        extra_corps = set(self._config.logs.wh_corps) if self._config else None
+        extra_alliances = set(self._config.logs.wh_alliances) if self._config else None
         tags: list[str] = []
         if is_wingspan(info.corp_name, info.alliance_name):
             tags.append("[#c47ab4]WINGSPAN[/#c47ab4]")
-        elif is_wh_corp(info.corp_name):
+        elif is_wh_corp(info.corp_name, extra_corps):
             tags.append("[#4ec9c4]WH[/#4ec9c4]")
-        elif is_wh_alliance(info.alliance_name):
+        elif is_wh_alliance(info.alliance_name, extra_alliances):
             tags.append("[#4ec9c4]WH[/#4ec9c4]")
 
         corp_display = (
@@ -422,7 +441,8 @@ class LogPanel(Static):
             label.update(
                 f"[#C15F3C]personnel assessment[/#C15F3C]  [#3a3530]·[/#3a3530]  [bold]{count}[/bold] [#9a9590]on record[/#9a9590]"
             )
-            sorted_rows = sorted(self._rows.values(), key=lambda r: _sort_key(6, r), reverse=True)
+            col, asc = self._sort_col, self._sort_asc
+            sorted_rows = sorted(self._rows.values(), key=lambda r: _sort_key(col, r), reverse=not asc)
             for row in sorted_rows:
                 table.add_row(*row)
         else:
@@ -440,29 +460,33 @@ class LogPanel(Static):
             await asyncio.sleep(0.08)
             i += 1
 
-    def action_copy_intel(self) -> None:
+    def _copy_text(self) -> str | None:
         if not self._rows:
-            return
-        system = self.app.sub_title
-        if "·" in system:
-            system = system.split("·")[-1].strip()
-        else:
-            system = ""
+            return None
+        system = self._current_system()
         flagged = [
             r for r in self._rows.values()
             if "☠" in r[6] or ("%" in r[6] and _risk_val(r[6]) >= 30)
         ]
-        lines = [f"local{' · ' + system if system else ''} · {len(self._rows)} pilots"]
+        lines = [f"log{' · ' + system if system else ''} · {len(self._rows)} pilots"]
         if flagged:
             pilot_strs = []
             for r in flagged:
                 name, _, _, kills, _, _, risk, tags = r
-                tag_str = f" [{tags}]" if tags != "-" else ""
-                pilot_strs.append(f"{name}{tag_str} {risk} {kills}k")
+                tag_str = f" [{strip_markup(tags)}]" if tags != "-" else ""
+                risk_clean = strip_markup(risk)
+                risk_label = "☠" if "☠" in risk else f"{risk_clean} danger"
+                pilot_strs.append(f"{name}{tag_str} {risk_label} {kills} kills")
             lines.append("flagged: " + " · ".join(pilot_strs))
         else:
             lines.append("no flagged pilots")
-        self.app.copy_to_clipboard(strip_markup("  |  ".join(lines)))
+        return "  |  ".join(lines)
+
+    def action_copy_intel(self) -> None:
+        text = self._copy_text()
+        if not text:
+            return
+        self.app.copy_to_clipboard(text)
         label = self.query_one("#log-results-label", Label)
         original = label.renderable
         label.update("[#7a756e]copied ✓[/#7a756e]")

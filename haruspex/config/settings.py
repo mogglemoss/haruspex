@@ -39,6 +39,8 @@ class LogsConfig:
     enabled: bool = False
     path: str = ""
     intel_channels: list[str] = field(default_factory=list)
+    wh_corps: list[str] = field(default_factory=list)
+    wh_alliances: list[str] = field(default_factory=list)
 
     @property
     def log_path(self) -> Path | None:
@@ -59,6 +61,8 @@ class Config:
                 "enabled": self.logs.enabled,
                 "path": self.logs.path,
                 "intel_channels": self.logs.intel_channels,
+                "wh_corps": self.logs.wh_corps,
+                "wh_alliances": self.logs.wh_alliances,
             }
         }
         CONFIG_FILE.write_bytes(tomli_w.dumps(data).encode())
@@ -75,6 +79,8 @@ class Config:
                     enabled=logs_data.get("enabled", False),
                     path=logs_data.get("path", ""),
                     intel_channels=logs_data.get("intel_channels", []),
+                    wh_corps=logs_data.get("wh_corps", []),
+                    wh_alliances=logs_data.get("wh_alliances", []),
                 )
             )
         except Exception:
