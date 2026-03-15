@@ -7,7 +7,7 @@ from textual.containers import Horizontal, Vertical
 from textual.widgets import Label, Static, TextArea
 from haruspex.ui.widgets import MASCOT, PasteArea, strip_markup
 
-from haruspex.parsers.dscan import DscanResult, parse
+from haruspex.parsers.dscan import DscanResult, filter_by_range, parse
 
 BAR_WIDTH = 16
 BAR_FULL  = "█"
@@ -111,6 +111,7 @@ class DscanPanel(Static):
 
     BINDINGS = [
         Binding("c", "copy_result", "Copy intel", show=True),
+        Binding("r", "toggle_range", "On-grid only", show=True),
     ]
 
     DEFAULT_CSS = """
@@ -181,6 +182,7 @@ class DscanPanel(Static):
 
     def on_mount(self) -> None:
         self._last_result: DscanResult | None = None
+        self._range_filter: bool = False
 
     def on_text_area_changed(self, event: TextArea.Changed) -> None:
         text = event.text_area.text
@@ -189,13 +191,30 @@ class DscanPanel(Static):
             self.query_one("#results-content", Static).update("")
             self.query_one("#results-label", Label).update("[#7a756e]d-scan[/#7a756e]")
             return
-        result = parse(text)
-        self._last_result = result
-        rendered = _render_result(result)
-        self.query_one("#results-content", Static).update(rendered)
-        self.query_one("#results-label", Label).update(
-            f"[#C15F3C]d-scan[/#C15F3C]  [dim]·[/dim]  [bold]{result.total_ships}[/bold] [dim]ships[/dim]"
-        )
+        self._last_result = parse(text)
+        self._render_result()
+
+    def _render_result(self) -> None:
+        r = self._last_result
+        if not r:
+            return
+        result = filter_by_range(r, 10_000) if self._range_filter else r
+        self.query_one("#results-content", Static).update(_render_result(result))
+        label = self.query_one("#results-label", Label)
+        if self._range_filter:
+            label.update(
+                f"[#C15F3C]d-scan[/#C15F3C]  [dim]·[/dim]  "
+                f"[bold]{result.total_ships}[/bold] [dim]ships  ·  on-grid only[/dim]"
+            )
+        else:
+            label.update(
+                f"[#C15F3C]d-scan[/#C15F3C]  [dim]·[/dim]  "
+                f"[bold]{result.total_ships}[/bold] [dim]ships[/dim]"
+            )
+
+    def action_toggle_range(self) -> None:
+        self._range_filter = not self._range_filter
+        self._render_result()
 
     def action_copy_result(self) -> None:
         r = self._last_result
@@ -217,3 +236,7 @@ class DscanPanel(Static):
             parts.append(f"notable: {notable_str}")
         parts.append(r.threat)
         self.app.copy_to_clipboard(strip_markup("  |  ".join(parts)))
+        label = self.query_one("#results-label", Label)
+        original = label.renderable
+        label.update("[dim]copied ✓[/dim]")
+        self.set_timer(2.0, lambda: label.update(original))

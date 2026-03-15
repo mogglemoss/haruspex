@@ -343,3 +343,5 @@ class LocalPanel(Static):
         else:
             lines.append("no flagged pilots")
         self.app.copy_to_clipboard(strip_markup("  |  ".join(lines)))
+        self._set_status("[dim]copied ✓[/dim]")
+        self.set_timer(2.0, lambda: self._set_status(""))

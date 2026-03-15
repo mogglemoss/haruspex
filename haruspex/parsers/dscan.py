@@ -169,6 +169,22 @@ class DscanResult:
         return round(self.counts.get(cls, 0) / total * 100)
 
 
+def filter_by_range(result: DscanResult, max_km: float) -> DscanResult:
+    """Return a new DscanResult containing only entries within max_km."""
+    ships = _ships()
+    filtered = DscanResult()
+    for entry in result.entries:
+        km = entry.distance_km
+        if km is None or km > max_km:
+            continue
+        filtered.entries.append(entry)
+        _classify(filtered, ships, entry.ship_type)
+        if entry.ship_type in NOTABLE_HULLS:
+            filtered.notable[entry.ship_type] = filtered.notable.get(entry.ship_type, 0) + 1
+    filtered.threat = _assess_threat(filtered)
+    return filtered
+
+
 def parse(text: str) -> DscanResult:
     ships = _ships()
     result = DscanResult()

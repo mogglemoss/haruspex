@@ -32,6 +32,7 @@ class LogPanel(Static):
     BINDINGS = [
         Binding("ctrl+t", "toggle_tail", "Toggle tail", show=False, priority=True),
         Binding("c", "copy_intel", "Copy intel", show=True),
+        Binding("ctrl+r", "clear_table", "Clear", show=True),
     ]
 
     DEFAULT_CSS = """
@@ -337,6 +338,15 @@ class LogPanel(Static):
         else:
             lines.append("no flagged pilots")
         self.app.copy_to_clipboard(strip_markup("  |  ".join(lines)))
+        label = self.query_one("#log-results-label", Label)
+        original = label.renderable
+        label.update("[dim]copied ✓[/dim]")
+        self.set_timer(2.0, lambda: label.update(original))
+
+    def action_clear_table(self) -> None:
+        self._rows = {}
+        self._seen_pilots.clear()
+        self._render_rows()
 
     def on_unmount(self) -> None:
         if self._tail_task:
