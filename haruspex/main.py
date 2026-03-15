@@ -74,28 +74,46 @@ class LazyScanApp(App):
         background: $warm-panel;
     }
 
-    /* Kill the default blue focus ring on every widget */
+    /* Kill the default blue focus ring and outline on every widget */
     *:focus {
         border: round $warm-border;
+        outline: none;
     }
 
+    /* DataTable — override all blue states globally.
+       App CSS loads after DEFAULT_CSS so these win on equal specificity. */
     DataTable:focus {
         border: round $warm-border;
+        outline: none;
+    }
+
+    DataTable > .datatable--cursor {
+        background: $rust 25%;
+        color: $warm-text;
+    }
+
+    DataTable > .datatable--hover {
+        background: $rust 12%;
+        color: $warm-text;
+    }
+
+    DataTable > .datatable--even-row {
+        background: #1e1b16;
+    }
+
+    DataTable > .datatable--header {
+        color: #a09890;
+        background: $warm-surface;
     }
 
     /* Warm scrollbars — Textual defaults to blue */
     * {
         scrollbar-color: #5a5550;
         scrollbar-background: #1a1815;
-        scrollbar-color-hover: #C15F3C;
+        scrollbar-color-hover: $rust;
         scrollbar-background-hover: #1a1815;
-        scrollbar-color-active: #C15F3C;
+        scrollbar-color-active: $rust;
         scrollbar-background-active: #1a1815;
-    }
-
-    /* DataTable hover row — applies across all panels */
-    DataTable > .datatable--hover {
-        background: #C15F3C 10%;
     }
 
     /* PasteArea — suppress TextArea's blue cursor and selection */
