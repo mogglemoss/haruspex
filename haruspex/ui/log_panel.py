@@ -56,7 +56,7 @@ class LogPanel(Static):
 
     #log-summary {
         height: 1fr;
-        color: #7a756e;
+        color: #e8e6e3;
     }
 
     #log-detail {
@@ -113,12 +113,12 @@ class LogPanel(Static):
     }
 
     #enable-hint {
-        color: #7a756e;
+        color: #9a9590;
         margin-top: 2;
     }
 
     #log-empty-state {
-        color: #7a756e;
+        color: #9a9590;
         padding: 1 0;
     }
     """
@@ -197,16 +197,16 @@ class LogPanel(Static):
 
         if not cfg.enabled:
             text = (
-                "MONITORING DISABLED.\n"
+                "[#e8a559]MONITORING DISABLED.[/#e8a559]\n"
                 "Log tailing is not enabled.\n\n"
-                "[dim]See ~/.config/haruspex/config.toml[/dim]"
+                "[#7a756e]~/.config/lazyscan/config.toml[/#7a756e]"
             )
         elif not self._rows:
             system_line = f"\n[#C15F3C]{system}[/#C15F3C]" if system else ""
             text = (
                 f"[#C15F3C]● MONITORING ACTIVE.[/#C15F3C]{system_line}\n\n"
                 "No pilots have spoken.\n\n"
-                "[dim]Silent locals are not safe locals.[/dim]"
+                "[#7a756e]Silent locals are not safe locals.[/#7a756e]"
             )
         else:
             count = len(self._rows)
@@ -215,19 +215,19 @@ class LogPanel(Static):
                 if "☠" in r[6] or ("%" in r[6] and _risk_val(r[6]) >= 30)
             ]
             header = f"[#C15F3C]● {system}[/#C15F3C]" if system else "[#C15F3C]● MONITORING ACTIVE.[/#C15F3C]"
-            lines = [header, f"[bold]{count}[/bold] [dim]pilots on record[/dim]"]
+            lines = [header, f"[bold]{count}[/bold] [#9a9590]pilots on record[/#9a9590]"]
             if flagged:
-                lines.append(f"[red]{len(flagged)} flagged[/red]")
+                lines.append(f"[bold #ff6b6b]{len(flagged)} flagged[/bold #ff6b6b]")
                 lines.append("")
                 for r in list(flagged)[:4]:
                     name = r[0]
                     risk = r[6]
                     kills = r[3]
-                    lines.append(f"  [bold]{name}[/bold]  {risk}  [dim]{kills}k[/dim]")
+                    lines.append(f"  [bold]{name}[/bold]  {risk}  [#7a756e]{kills}k[/#7a756e]")
                 if len(flagged) > 4:
-                    lines.append(f"  [dim]… and {len(flagged) - 4} more[/dim]")
+                    lines.append(f"  [#7a756e]… and {len(flagged) - 4} more[/#7a756e]")
             else:
-                lines.append("[dim]no flagged pilots[/dim]")
+                lines.append("[#7a756e]no flagged pilots[/#7a756e]")
             text = "\n".join(lines)
 
         self.query_one("#log-summary", Static).update(text)
@@ -255,7 +255,7 @@ class LogPanel(Static):
                 "[red]log directory not found[/red]"
             )
             self.query_one("#enable-hint", Static).update(
-                "[dim]Specify log_path in\n~/.config/lazyscan/config.toml[/dim]"
+                "Specify log_path in\n[#7a756e]~/.config/lazyscan/config.toml[/#7a756e]"
             )
             self._refresh_summary()
             return
@@ -266,34 +266,35 @@ class LogPanel(Static):
         from haruspex.config.settings import detect_log_path
         detected = detected or detect_log_path()
 
-        self.query_one("#log-tail-status", Static).update("[dim]standing by[/dim]")
+        self.query_one("#log-tail-status", Static).update("[#7a756e]standing by[/#7a756e]")
         if detected:
             self.query_one("#log-path-label", Static).update(
-                f"[dim]log directory located:[/dim]\n[#7a756e]{str(detected)[:26]}[/#7a756e]"
+                f"[#7a756e]log directory located:[/#7a756e]\n{str(detected)[:26]}"
             )
             self.query_one("#enable-hint", Static).update(
-                "[dim]HARUSPEX has located your EVE log directory "
+                "HARUSPEX has located your EVE log directory "
                 "but will not access it without explicit authorisation.\n\n"
                 "LOG MONITORING IS APPROVED FOR CAPSULEER USE. "
                 "CCP WRITES THESE FILES FOR THIRD-PARTY CONSUMPTION. "
                 "HARUSPEX IS A THIRD PARTY.\n\n"
-                "To enable, add to\n~/.config/lazyscan/config.toml:\n\n"
-                "[logs]\nenabled = true[/dim]"
+                "To enable, add to\n[#7a756e]~/.config/lazyscan/config.toml[/#7a756e]:\n\n"
+                "[bold][logs]\nenabled = true[/bold]"
             )
         else:
             self.query_one("#enable-hint", Static).update(
-                "[dim]No EVE log directory detected.\n\n"
-                "Set path manually in\n~/.config/lazyscan/config.toml[/dim]"
+                "No EVE log directory detected.\n\n"
+                "Set path manually in\n[#7a756e]~/.config/lazyscan/config.toml[/#7a756e]"
             )
 
     def _start_tail(self, log_path: Path) -> None:
         short = str(log_path).replace(str(Path.home()), "~")
-        self.query_one("#log-path-label", Static).update(f"[dim]{short}[/dim]")
+        self.query_one("#log-path-label", Static).update(f"[#7a756e]{short}[/#7a756e]")
         self.query_one("#log-tail-status", Static).update("[#C15F3C]● monitoring[/#C15F3C]")
         self._tail_task = asyncio.create_task(
             tail(log_path, self._on_log_event)
         )
         asyncio.create_task(self._enrich_worker())
+        self._refresh_summary()
 
     def _update_system(self, system: str) -> None:
         self.app.sub_title = f"Proximity Intelligence Platform  ·  {system}"
@@ -389,7 +390,7 @@ class LogPanel(Static):
             empty.display = False
             table.display = True
             label.update(
-                f"[#C15F3C]personnel assessment[/#C15F3C]  [dim]·[/dim]  [bold]{count}[/bold] [dim]on record[/dim]"
+                f"[#C15F3C]personnel assessment[/#C15F3C]  [#3a3530]·[/#3a3530]  [bold]{count}[/bold] [#9a9590]on record[/#9a9590]"
             )
             sorted_rows = sorted(self._rows.values(), key=lambda r: _sort_key(6, r), reverse=True)
             for row in sorted_rows:
@@ -434,7 +435,7 @@ class LogPanel(Static):
         self.app.copy_to_clipboard(strip_markup("  |  ".join(lines)))
         label = self.query_one("#log-results-label", Label)
         original = label.renderable
-        label.update("[dim]copied ✓[/dim]")
+        label.update("[#7a756e]copied ✓[/#7a756e]")
         self.set_timer(2.0, lambda: label.update(original))
 
     def action_clear_table(self) -> None:

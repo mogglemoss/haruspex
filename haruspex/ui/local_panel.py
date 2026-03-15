@@ -224,7 +224,7 @@ class LocalPanel(Static):
 
         count = len(self._rows)
         flagged = [r for r in self._rows if "☠" in r[6] or ("%" in r[6] and _risk_val(r[6]) >= 30)]
-        lines = [f"[bold]{count}[/bold] [dim]pilots on record[/dim]"]
+        lines = [f"[bold]{count}[/bold] [#9a9590]pilots on record[/#9a9590]"]
 
         if flagged:
             lines.append(f"[red]{len(flagged)} flagged[/red]")
@@ -234,9 +234,9 @@ class LocalPanel(Static):
                 tag_str = f"  [{strip_markup(tags)}]" if tags != "-" else ""
                 lines.append(f"  [bold]{name}[/bold]{tag_str}  {risk}  [dim]{kills}k[/dim]")
             if len(flagged) > 5:
-                lines.append(f"  [dim]… and {len(flagged) - 5} more[/dim]")
+                lines.append(f"  [#7a756e]… and {len(flagged) - 5} more[/#7a756e]")
         else:
-            lines.append("[dim]no flagged pilots[/dim]")
+            lines.append("[#7a756e]no flagged pilots[/#7a756e]")
 
         self.query_one("#local-summary", Static).update("\n".join(lines))
 
@@ -366,7 +366,7 @@ class LocalPanel(Static):
 
             self._rows = rows
             self._render_rows()
-            label.update(f"[#C15F3C]personnel assessment[/#C15F3C]  [dim]·[/dim]  [bold]{len(rows)}[/bold] [dim]on record[/dim]")
+            label.update(f"[#C15F3C]personnel assessment[/#C15F3C]  [#3a3530]·[/#3a3530]  [bold]{len(rows)}[/bold] [#9a9590]on record[/#9a9590]")
             self._set_status("")
             self._refresh_summary()
 
@@ -413,5 +413,5 @@ class LocalPanel(Static):
         else:
             lines.append("no flagged pilots")
         self.app.copy_to_clipboard(strip_markup("  |  ".join(lines)))
-        self._set_status("[dim]copied ✓[/dim]")
+        self._set_status("[#7a756e]copied ✓[/#7a756e]")
         self.set_timer(2.0, lambda: self._set_status(""))
