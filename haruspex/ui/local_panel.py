@@ -223,9 +223,8 @@ class LocalPanel(Static):
             lines.append("")
             for r in flagged[:5]:
                 name, _, _, kills, _, _, risk, tags = r
-                risk_clean = strip_markup(risk)
                 tag_str = f"  [{strip_markup(tags)}]" if tags != "-" else ""
-                lines.append(f"  [bold]{name}[/bold]{tag_str}  {risk_clean}  [dim]{kills}k[/dim]")
+                lines.append(f"  [bold]{name}[/bold]{tag_str}  {risk}  [dim]{kills}k[/dim]")
             if len(flagged) > 5:
                 lines.append(f"  [dim]… and {len(flagged) - 5} more[/dim]")
         else:

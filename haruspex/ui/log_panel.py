@@ -213,7 +213,7 @@ class LogPanel(Static):
                 lines.append("")
                 for r in list(flagged)[:4]:
                     name = r[0]
-                    risk = strip_markup(r[6])
+                    risk = r[6]
                     kills = r[3]
                     lines.append(f"  [bold]{name}[/bold]  {risk}  [dim]{kills}k[/dim]")
                 if len(flagged) > 4:
