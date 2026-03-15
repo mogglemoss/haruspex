@@ -41,7 +41,7 @@ jobs:
 
   # ── macOS — build Intel and ARM separately, then lipo ───────────────────
   build-macos-x64:
-    runs-on: macos-13          # Intel runner
+    runs-on: macos-12          # Intel runner (macos-13 retired)
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
