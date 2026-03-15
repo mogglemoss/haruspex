@@ -5,11 +5,13 @@
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-C15F3C)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-3a3530)](LICENSE)
 
-> ~~This is a personal project by~~ [Cormorant Fell](https://evewho.com/character/93594488), proud WiNGSPAN alumni and enthusiastic contributor to New Eden's tradition of dying in wormholes. It works. It has opinions. Some of them are correct.
+<img src="assets/cormorantfell-portrait.jpeg" width="72" align="right">
+
+> [Cormorant Fell](https://evewho.com/character/93594488) — WiNGSPAN alumni and, on balance, more of a wormhole enthusiast than a wormhole survivor — built this. It works. It has opinions. Some of them are correct.
 
 **Proximity Intelligence Platform · DSS-T3 · Capsuleer Edition**
 
-HARUSPEX is a terminal-based EVE Online intel tool. It runs on a second monitor alongside the game. You paste things into it. It tells you things about those things. Whether those things are accurate is, per HARUSPEX's own legal counsel, a matter of active philosophical inquiry.
+HARUSPEX is a terminal-based EVE Online intel tool. Run it on a second monitor, alt-tab to it, prop it in a corner — HARUSPEX has no opinion on your window management and is not your Space Mom. You paste things into it. It tells you things about those things. Whether those things are accurate is, per HARUSPEX's own legal counsel, a matter of active philosophical inquiry.
 
 ```
 HARUSPEX INTELLIGENCE DIVISION MAKES NO REPRESENTATIONS REGARDING
@@ -23,11 +25,37 @@ HARUSPEX CONSIDERS THESE FACTS UNRELATED.
 
 ---
 
+![HARUSPEX overview — D-Scan, Local, and Monitoring panels](assets/haruspex.png)
+
+---
+
 ## What It Does
 
-**D-Scan** takes the raw output of your directional scanner and classifies it. Ship types, hull categories, threat composition, notable hulls — it produces an operational assessment in the tone of a mid-level analyst who is professionally confident and personally unconcerned. The results are instant. The interpretation is yours.
+**D-Scan** ingests the raw output of your directional scanner and returns a structured tactical picture. This happens locally, against a bundled ship database covering 529 hull types, in under a millisecond. No network request is made. The results are therefore equally fast whether you are in Jita or a C5 with no static.
+
+Ships are classified into five tactical categories — **▸ Combat, ◆ Recon, ◎ Logi, ○ Hauler, · Other** — each rendered with a proportional bar chart and percentage breakdown. This is the part that tells you roughly what kind of problem you have.
+
+**Signals of Interest** identifies tactically significant hulls and groups them by category in threat-priority order: Black Ops, Command Ships, Heavy Interdictors, Interdictors, Combat Recons, Strategic Cruisers, Logistics Battleships, and the covert-capable classes. Each category is iconised for rapid scanning. This is the part that tells you specifically what kind of problem you have.
+
+Combat Recon Ships carry a passive role bonus reducing their sensor strength to zero, making them invisible to directional scanners by design. If one nonetheless appears in Signals of Interest, HARUSPEX notes this and considers it significant. HARUSPEX does not speculate as to how.
+
+**Field conditions** catalogues everything that is not a ship, with annotations where context changes the meaning:
+
+- A **Mobile Tractor Unit** indicates a pilot currently running a site. They are probably not watching their directional scanner. HARUSPEX considers this tactically relevant.
+- A **deployed warp disruption probe** indicates something is being caught right now.
+- A **cynosural field** indicates that whatever was invited has arrived.
+- **Combat probes** indicate an active hunter. You may be the target. HARUSPEX cannot confirm this but thinks it worth mentioning.
+- A **MTU alongside wrecks** resolves to a more specific annotation than either alone.
+
+The **operational assessment** synthesises the above: fleet archetype (gate camp, wormhole hunter gang, doctrine fleet, doctrine fleet with ewar wing, black ops drop, capital escalation, nano roam, and others), logistics ratio when it crosses significance thresholds, and an overall threat statement. It is produced by an analyst who has reached these conclusions before and finds them only mildly interesting.
+
+The **overview card** presents a compressed version of the full analysis — bar chart, signals of interest by category, field condition flags, and all assessment lines — so the picture is legible at a glance before you commit to opening the panel. Pressing `d` opens the full assessment. Pressing `Esc` returns you to the overview, where HARUSPEX will continue to hold your results without complaint.
+
+---
 
 **Local** accepts a paste of your local chat roster and cross-references every name against the EVE registry and zKillboard's public kill records. It will tell you how many people have died, how dangerous they are assessed to be, and whether any of them are known wormhole affiliates. It will not tell you whether any of them are about to kill you. That information is available elsewhere, typically in the form of a bright flash and a pod notification.
+
+---
 
 **Monitoring** watches your EVE chat logs in real time. Any pilot who speaks in local is automatically enriched, assessed, and added to the table without further input from you. The system name is detected automatically and displayed in the header. Pilots who do not speak will not appear. HARUSPEX considers this an upstream limitation and has filed the appropriate documentation.
 
@@ -132,10 +160,12 @@ Clicking any overview card opens that panel. This works as expected. HARUSPEX is
 
 | Component | Detail |
 |-----------|--------|
-| Analysis engine | Ship classification · SDE corpus |
+| D-Scan engine | Local · bundled SDE corpus · no network |
 | Hull coverage | 529 types · 46 groups · drone classes |
-| Notable hulls | 46 flagged types · 9 tactical categories |
-| Threat model | Empirical · ship count + logistics presence |
+| Signals of Interest | 40 flagged hulls · 10 tactical categories · threat-priority order |
+| Fleet archetypes | 8 detected types · gate camp · WH gang · doctrine fleet · black ops · capital · and others |
+| Field conditions | MTU · deployed bubble · cyno field · combat probes · core probes · wrecks · and others |
+| Threat model | Empirical · ship count · logistics ratio · hull composition |
 | Name resolution | ESI `/universe/ids/` · bulk |
 | Kill data | zKillboard public API · rate-limited · 3 concurrent |
 | Danger threshold | ≥50% danger ratio AND ≥10 kills |
@@ -172,6 +202,8 @@ Clicking any overview card opens that panel. This works as expected. HARUSPEX is
 ## A Note on Intelligence
 
 HARUSPEX produces assessments, not facts. A pilot with zero kills on zKillboard may be a peaceful hauler. They may also be a veteran with a private killboard and a deep personal commitment to your destruction. HARUSPEX cannot tell the difference. Neither can you, most of the time, which is at least a shared limitation.
+
+A clean D-scan does not mean the system is empty. It means the system appears empty to your directional scanner. These are related but not identical conditions. HARUSPEX has opinions about this distinction and has incorporated them into its threat model, to the extent that a threat model can have opinions.
 
 The system is most useful when combined with spatial awareness, good intel habits, and the kind of quiet suspicion that wormhole space instills in those who survive it long enough to develop opinions.
 

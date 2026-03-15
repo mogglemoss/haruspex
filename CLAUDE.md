@@ -1,8 +1,8 @@
 # HARUSPEX
 
-EVE Online D-scan and local intel TUI. Terminal-based, runs on a second monitor
-alongside the game. Paste D-scan or local chat output for instant threat analysis
-and character intel. Optionally tail live log files for automatic enrichment.
+EVE Online D-scan and local intel TUI. Paste D-scan or local chat output for instant
+threat analysis and character intel. Optionally tail live log files for automatic
+enrichment.
 
 ## Stack
 
@@ -99,14 +99,18 @@ lists in `zkill.py`.
   combine with `lipo`; triggered on version tags via GitHub Actions
 - **No combat log / intel channel parsing** — out of scope
 
-## Notable ship classes flagged
+## Signals of Interest — flagged hull categories (threat-priority order)
 
-Combat recons: Pilgrim, Curse, Huginn, Rapier, Lachesis, Arazu
+Combat recons (D-scan immune): Falcon, Rook, Huginn, Rapier, Lachesis, Arazu, Pilgrim, Curse
 Black ops: Redeemer, Sin, Widow, Panther
 Heavy interdictors: Devoter, Onyx, Broadsword, Phobos
 Interdictors: Sabre, Flycatcher, Heretic, Eris
 Strategic cruisers: Loki, Tengu, Proteus, Legion
-Covert ops / hunters: Stratios, Astero, Helios, Buzzard, Cheetah, Anathema, Imicus
+Command ships: Eos, Damnation, Claymore, Vulture, Absolution, Astarte, Nighthawk, Sleipnir
+Logistics battleship: Nestor
+Covert hunters: Stratios, Astero
+Covert ops: Helios, Buzzard, Cheetah, Anathema
+Exploration frigates: Imicus
 
 ## Data sources
 

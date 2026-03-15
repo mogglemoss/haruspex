@@ -158,7 +158,7 @@ class LocalPanel(Static):
         "Deposit a personnel manifest in the left pane.\n"
         "HARUSPEX will resolve each name against the EVE registry "
         "and retrieve public kill records.\n\n"
-        "[dim]TECHNICAL SPECIFICATIONS\n"
+        "[#7a756e]TECHNICAL SPECIFICATIONS\n"
         "  Resolution engine  ESI /universe/ids/ · bulk name lookup\n"
         "  Kill data source   zKillboard public API\n"
         "  Request model      Async · rate-limited · 3 concurrent\n"
@@ -169,13 +169,13 @@ class LocalPanel(Static):
         "THIS IS A KNOWN LIMITATION AND NOT A BUG. "
         "THE DISTINCTION IS PHILOSOPHICAL.\n\n"
         "THE PERSON CURRENTLY SHOOTING YOU MAY OR MAY NOT APPEAR ON THIS LIST. "
-        "HARUSPEX CONSIDERS THIS A MATTER BETWEEN YOU AND THEM.[/dim]"
+        "HARUSPEX CONSIDERS THIS A MATTER BETWEEN YOU AND THEM.[/#7a756e]"
     )
 
     SUMMARY_EMPTY = (
         "NO PERSONNEL ON FILE.\n"
         "HARUSPEX has no one to look up.\n\n"
-        "[dim]Press [bold]l[/bold] to deposit a roster.[/dim]"
+        "[#7a756e]Press [bold]l[/bold] to deposit a roster.[/#7a756e]"
     )
 
     def compose(self) -> ComposeResult:

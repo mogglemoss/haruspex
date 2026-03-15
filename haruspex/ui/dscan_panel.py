@@ -7,7 +7,35 @@ from textual.containers import Horizontal, Vertical
 from textual.widgets import Label, Static, TextArea
 from haruspex.ui.widgets import PasteArea, strip_markup
 
-from haruspex.parsers.dscan import DscanResult, parse
+from haruspex.parsers.dscan import DscanResult, NOTABLE_HULLS, parse, _DSCAN_IMMUNE
+
+# Tactical category display order — most immediately threatening first
+_CAT_ORDER = [
+    "Black Ops",
+    "Command Ship",
+    "Heavy Interdictor",
+    "Interdictor",
+    "Combat Recon",
+    "Strategic Cruiser",
+    "Logistics Battleship",
+    "Covert Hunter",
+    "Covert Ops",
+    "Exploration Frigate",
+]
+
+# Icon per tactical category — intentional echoes: ◆ = recon class, ◎ = logi class
+_CAT_ICONS: dict[str, str] = {
+    "Black Ops":           "◼",
+    "Command Ship":        "▲",
+    "Heavy Interdictor":   "⊗",
+    "Interdictor":         "▶",
+    "Combat Recon":        "◆",
+    "Strategic Cruiser":   "△",
+    "Logistics Battleship":"◎",
+    "Covert Hunter":       "◦",
+    "Covert Ops":          "◦",
+    "Exploration Frigate": "◦",
+}
 
 BAR_WIDTH = 16
 BAR_FULL  = "█"
@@ -64,28 +92,41 @@ def _render_result(result: DscanResult) -> str:
 
     # Non-ship entities — only show what's present
     non_ship = [
-        (result.fighters,      "◆  Fighters"),
-        (result.drones,        "·  Drones"),
-        (result.wrecks,        "†  Wrecks"),
-        (result.deployables,   "◇  Deployables"),
-        (result.structures,    "▪  Structures"),
-        (result.npcs,          "○  NPCs"),
-        (result.cosmic,        "◉  Cosmic"),
-        (result.celestials,    "·  Celestials"),
-        (result.combat_probes, "⊕  Combat Probes"),
-        (result.core_probes,   "⊙  Core Probes"),
-        (result.unknown,       "?  Unknown"),
+        (result.fighters,              "◈  Fighters"),
+        (result.drones,                "•  Drones"),
+        (result.wrecks,                "†  Wrecks"),
+        (result.mtu,                   "⊡  MTU"),
+        (result.deployables,           "◇  Deployables"),
+        (result.structures,            "▪  Structures"),
+        (result.npcs,                  "◌  NPCs"),
+        (result.cosmic,                "◉  Cosmic"),
+        (result.celestials,            "✦  Celestials"),
+        (result.combat_probes,         "⊕  Combat Probes"),
+        (result.core_probes,           "⊙  Core Probes"),
+        (result.unknown,               "?  Unknown"),
     ]
     shown = [(count, label) for count, label in non_ship if count > 0]
     if shown:
         lines.append("[#3a3530]── field conditions ────────────────────[/#3a3530]")
         for count, label in shown:
-            hint = "  [#7a756e](evidence of prior engagement)[/#7a756e]" if "Wreck" in label else ""
-            if "Deployable" in label:
+            hint = ""
+            if "Wreck" in label:
+                hint = (
+                    "  [#e8a559](active site · pilot likely on field)[/#e8a559]"
+                    if result.mtu > 0
+                    else "  [#7a756e](evidence of prior engagement)[/#7a756e]"
+                )
+            elif "MTU" in label:
+                hint = (
+                    "  [#e8a559](active site · approach with intent)[/#e8a559]"
+                    if result.wrecks > 0
+                    else "  [#e8a559](active site in progress · pilot likely occupied)[/#e8a559]"
+                )
+            elif "Deployable" in label:
                 hint = "  [#7a756e](temporary infrastructure)[/#7a756e]"
-            if "Combat Probe" in label:
+            elif "Combat Probe" in label:
                 hint = "  [#e8a559](active hunter)[/#e8a559]"
-            if "Core Probe" in label:
+            elif "Core Probe" in label:
                 hint = "  [#7a756e](scanning activity)[/#7a756e]"
             lines.append(f"  {label:<14}  [bold]{count:>3}[/bold]{hint}")
         lines.append("")
@@ -93,11 +134,22 @@ def _render_result(result: DscanResult) -> str:
     lines.append("")
 
     if result.notable:
-        lines.append("[#3a3530]── persons of interest ────────────────[/#3a3530]")
-        parts = []
-        for hull, count in sorted(result.notable.items()):
-            parts.append(f"[#C15F3C]{hull}[/#C15F3C]" + (f" [#7a756e]×{count}[/#7a756e]" if count > 1 else ""))
-        lines.append("  " + "  ·  ".join(parts))
+        lines.append("[#3a3530]── signals of interest ────────────────[/#3a3530]")
+        # Group by tactical category, sorted by threat priority
+        by_cat: dict[str, list[tuple[str, int]]] = {}
+        for hull, count in result.notable.items():
+            cat = NOTABLE_HULLS.get(hull, "Unknown")
+            by_cat.setdefault(cat, []).append((hull, count))
+        for cat in sorted(by_cat, key=lambda c: (_CAT_ORDER.index(c) if c in _CAT_ORDER else 99)):
+            hulls = sorted(by_cat[cat])
+            hull_str = "  ·  ".join(
+                f"[#C15F3C]{h}[/#C15F3C]" + (f" [#7a756e]×{n}[/#7a756e]" if n > 1 else "")
+                for h, n in hulls
+            )
+            icon = _CAT_ICONS.get(cat, "·")
+            lines.append(f"  {icon} [#7a756e]{cat:<19}[/#7a756e]  {hull_str}")
+        if any(h in _DSCAN_IMMUNE for h in result.notable):
+            lines.append("  [#3a3530]combat recon hulls carry passive d-scan immunity · their presence on scan is, by definition, notable[/#3a3530]")
         lines.append("")
 
     lines.append("[#3a3530]── operational assessment ──────────────[/#3a3530]")
@@ -183,23 +235,23 @@ class DscanPanel(Static):
     DISCLAIMER = (
         "Deposit scan telemetry in the left pane.\n"
         "HARUSPEX will classify nearby assets and render an operational assessment.\n\n"
-        "[dim]TECHNICAL SPECIFICATIONS\n"
+        "[#7a756e]TECHNICAL SPECIFICATIONS\n"
         "  Analysis engine    Ship classification lookup · SDE corpus\n"
         "  Hull coverage      529 types across 46 groups + drone classes\n"
-        "  Notable hulls      46 flagged types across 9 tactical categories\n"
+        "  Notable hulls      40 flagged types across 10 tactical categories\n"
         "  Threat model       Empirical · ship count + logistics presence\n"
         "  Network required   No · all classification is local\n\n"
         "HARUSPEX INTELLIGENCE DIVISION MAKES NO REPRESENTATIONS REGARDING "
         "THREAT ACCURACY, TACTICAL VIABILITY, OR THE DISPOSITION OF PILOTS NOT ON D-SCAN.\n\n"
         "ANY ACCURATE THREAT ASSESSMENT IS INCIDENTAL.\n\n"
         "HARUSPEX HAS NEVER LOST A SHIP. HARUSPEX HAS ALSO NEVER FLOWN ONE. "
-        "HARUSPEX CONSIDERS THESE FACTS UNRELATED.[/dim]"
+        "HARUSPEX CONSIDERS THESE FACTS UNRELATED.[/#7a756e]"
     )
 
     SUMMARY_EMPTY = (
         "SCAN TELEMETRY ABSENT.\n"
         "HARUSPEX has nothing to assess.\n\n"
-        "[dim]Press [bold]d[/bold] to submit a scan.[/dim]"
+        "[#7a756e]Press [bold]d[/bold] to submit a scan.[/#7a756e]"
     )
 
     def compose(self) -> ComposeResult:
@@ -242,25 +294,51 @@ class DscanPanel(Static):
             return
         self.border_title = f"[d] D-SCAN · {r.total_ships}"
 
-        lines = [f"[bold]{r.total_ships}[/bold] [dim]ships[/dim]"]
+        lines = [f"[bold]{r.total_ships}[/bold] [#9a9590]ships[/#9a9590]  [#7a756e]{r.total_objects} objects[/#7a756e]"]
         lines.append("")
         for cls, label in CLASS_DISPLAY:
             n = r.counts.get(cls, 0)
             if n:
                 pct = r.pct(cls)
-                short = label.split()[-1]
-                lines.append(f"  {short:<8}  [bold]{n:>3}[/bold]  [dim]{pct}%[/dim]")
+                icon, short = label.split()[0], label.split()[-1]
+                filled = round(pct / 100 * 10)
+                bar = f"[#C15F3C]{BAR_FULL * filled}[/#C15F3C][#3a3530]{BAR_EMPTY * (10 - filled)}[/#3a3530]"
+                lines.append(f"  {icon} {short:<7}  [bold]{n:>3}[/bold]  {bar}  [#9a9590]{pct:>3}%[/#9a9590]")
 
         if r.notable:
             lines.append("")
-            hulls = "  ·  ".join(f"[#C15F3C]{h}[/#C15F3C]" for h in r.notable)
-            lines.append(f"  {hulls}")
+            # Aggregate by category for compact overview display
+            by_cat: dict[str, int] = {}
+            for hull, count in r.notable.items():
+                cat = NOTABLE_HULLS.get(hull, "Unknown")
+                by_cat[cat] = by_cat.get(cat, 0) + count
+            cat_parts = []
+            for cat in sorted(by_cat, key=lambda c: (_CAT_ORDER.index(c) if c in _CAT_ORDER else 99)):
+                total = by_cat[cat]
+                icon = _CAT_ICONS.get(cat, "·")
+                cat_parts.append(
+                    f"{icon} [#C15F3C]{cat}[/#C15F3C]" + (f" [#9a9590]×{total}[/#9a9590]" if total > 1 else "")
+                )
+            lines.append("  " + "  ·  ".join(cat_parts))
+
+        flags = []
+        if r.cyno_fields:
+            flags.append("[bold red]CYNO[/bold red]")
+        if r.warp_disruption_probes:
+            flags.append("[#e8a559]bubble[/#e8a559]")
+        if r.combat_probes:
+            flags.append("[#e8a559]probes[/#e8a559]")
+        if r.mtu:
+            flags.append("[#7a756e]active site[/#7a756e]")
+        if flags:
+            lines.append("")
+            lines.append("  " + "  ·  ".join(flags))
 
         if r.assessments:
             lines.append("")
-            for sev, _, txt in r.assessments[:2]:
+            for sev, lbl, txt in r.assessments:
                 color = _SEVERITY_COLOR.get(sev, "#e8a559")
-                lines.append(f"  [{color}]{txt}[/{color}]")
+                lines.append(f"  [#7a756e]{lbl}[/#7a756e]  [{color}]{txt}[/{color}]")
 
         self.query_one("#dscan-summary", Static).update("\n".join(lines))
 
@@ -321,5 +399,5 @@ class DscanPanel(Static):
         self.app.copy_to_clipboard(text)
         label = self.query_one("#results-label", Label)
         original = label.renderable
-        label.update("[dim]copied ✓[/dim]")
+        label.update("[#7a756e]copied ✓[/#7a756e]")
         self.set_timer(2.0, lambda: label.update(original))

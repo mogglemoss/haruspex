@@ -128,7 +128,7 @@ class LogPanel(Static):
     LOG_EMPTY = (
         "HARUSPEX is monitoring your local chat log.\n"
         "Pilots who speak in local will be enriched and added to this table.\n\n"
-        "[dim]TECHNICAL SPECIFICATIONS\n"
+        "[#7a756e]TECHNICAL SPECIFICATIONS\n"
         "  Monitoring method  Local chat log tail · UTF-16LE\n"
         "  Trigger event      Pilot speech in local channel\n"
         "  Coverage           All space types\n"
@@ -139,7 +139,7 @@ class LogPanel(Static):
         "HARUSPEX CONSIDERS THIS AN UPSTREAM LIMITATION.\n\n"
         "THIS SYSTEM DOES NOT DETECT CLOAKED HOSTILES. "
         "NO SYSTEM DOES. "
-        "HARUSPEX RECOMMENDS TREATING ALL WORMHOLES AS OCCUPIED.[/dim]"
+        "HARUSPEX RECOMMENDS TREATING ALL WORMHOLES AS OCCUPIED.[/#7a756e]"
     )
 
     def __init__(self, config: Config, **kwargs):

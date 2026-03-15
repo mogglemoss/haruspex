@@ -43,7 +43,27 @@ NOTABLE_HULLS: dict[str, str] = {
     "Cheetah": "Covert Ops",
     "Anathema": "Covert Ops",
     "Imicus": "Exploration Frigate",
+    # Combat recons — Caldari pair completes the set
+    "Falcon": "Combat Recon",
+    "Rook": "Combat Recon",
+    # Command ships — presence implies an organised boosting doctrine
+    "Eos": "Command Ship",
+    "Damnation": "Command Ship",
+    "Claymore": "Command Ship",
+    "Vulture": "Command Ship",
+    "Absolution": "Command Ship",
+    "Astarte": "Command Ship",
+    "Nighthawk": "Command Ship",
+    "Sleipnir": "Command Ship",
+    # Logistics battleship — rare, significant; can also field fighters
+    "Nestor": "Logistics Battleship",
 }
+
+# Combat Recon Ships have a passive role bonus that reduces sensor strength to zero,
+# making them invisible to directional scanners. Seeing one on scan is unusual.
+_DSCAN_IMMUNE: frozenset[str] = frozenset({
+    "Falcon", "Rook", "Huginn", "Rapier", "Lachesis", "Arazu",
+})
 
 # Player-built structures
 _STRUCTURE_KW = (
@@ -154,6 +174,9 @@ class DscanResult:
     unknown: int = 0
     core_probes: int = 0
     combat_probes: int = 0
+    mtu: int = 0                    # Mobile Tractor Unit — implies active site
+    warp_disruption_probes: int = 0 # Deployed dictor bubble — something being caught
+    cyno_fields: int = 0            # Cynosural field active — capital bridge
     threat: str = ""
     archetype: str = ""
     # Ordered list of (color, label, text) assessment lines for display
@@ -250,6 +273,21 @@ def _classify(result: DscanResult, ships: dict, ship_type: str) -> None:
     # 2. Wreck
     if "wreck" in low:
         result.wrecks += 1
+        return
+
+    # 3a. Cynosural field — intercept before deployables (_DEPLOYABLE_KW contains it)
+    if "cynosural field" in low:
+        result.cyno_fields += 1
+        return
+
+    # 3b. Mobile Tractor Unit — intercept before deployables for distinct tracking
+    if ship_type == "Mobile Tractor Unit":
+        result.mtu += 1
+        return
+
+    # 3c. Warp Disruption Probe (launched by interdictors — not the anchored structure)
+    if "warp disruption probe" in low and "mobile" not in low:
+        result.warp_disruption_probes += 1
         return
 
     # 3. Cosmic anomaly / signature / wormhole
@@ -401,6 +439,18 @@ def _build_assessments(r: DscanResult) -> list[tuple[str, str, str]]:
     if r.archetype:
         items.append(("medium", "fleet type", r.archetype))
 
+    # Logistics ratio — meaningful when logi is significant relative to combat
+    combat = r.counts.get("combat", 0)
+    logi = r.counts.get("logi", 0)
+    if logi >= 1 and combat >= 2:
+        ratio = round(logi / (combat + logi) * 100)
+        if ratio >= 30:
+            items.append(("high", "logistics", f"{ratio}% logi coverage — heavily supported. Breaking this requires commitment."))
+        elif ratio >= 20:
+            items.append(("medium", "logistics", f"{ratio}% logi coverage — sustained engagement capability."))
+        elif ratio >= 15:
+            items.append(("low", "logistics", f"{ratio}% logi coverage — light support presence."))
+
     # Probe intel — independent of ship count, always shown when present
     if r.combat_probes:
         n = f" ×{r.combat_probes}" if r.combat_probes > 1 else ""
@@ -408,5 +458,15 @@ def _build_assessments(r: DscanResult) -> list[tuple[str, str, str]]:
     if r.core_probes:
         n = f" ×{r.core_probes}" if r.core_probes > 1 else ""
         items.append(("low", "core probes", f"Core probes on scan{n}. System is being scanned."))
+
+    # Warp disruption probe — active bubble, something is being caught
+    if r.warp_disruption_probes:
+        n = f" ×{r.warp_disruption_probes}" if r.warp_disruption_probes > 1 else ""
+        items.append(("high", "bubble", f"Warp disruption probe on scan{n}. Something is being caught."))
+
+    # Cynosural field — capital bridge active, show last for emphasis
+    if r.cyno_fields:
+        n = f" ×{r.cyno_fields}" if r.cyno_fields > 1 else ""
+        items.append(("critical", "cyno field", f"Cynosural field active{n}. Whatever was invited has arrived."))
 
     return items
