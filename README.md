@@ -11,7 +11,7 @@
 
 **Proximity Intelligence Platform · DSS-T3 · Capsuleer Edition**
 
-HARUSPEX is a terminal-based EVE Online intel tool. Run it on a second monitor, alt-tab to it, prop it in a corner — HARUSPEX has no opinion on your window management and is not your Space Mom. You paste things into it. It tells you things about those things. Whether those things are accurate is, per HARUSPEX's own legal counsel, a matter of active philosophical inquiry.
+HARUSPEX is a terminal-based EVE Online intel tool — a TUI, meaning it lives in your terminal, runs on keyboard input, and renders entirely in text. This is considered a feature. Run it on a second monitor, alt-tab to it, prop it in a corner — HARUSPEX has no opinion on your window management and is not your Space Mom. You paste things into it. It tells you things about those things. Whether those things are accurate is, per HARUSPEX's own legal counsel, a matter of active philosophical inquiry.
 
 ```
 HARUSPEX INTELLIGENCE DIVISION MAKES NO REPRESENTATIONS REGARDING

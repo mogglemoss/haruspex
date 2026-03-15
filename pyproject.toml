@@ -1,6 +1,6 @@
 [project]
 name = "haruspex"
-version = "0.1.0"
+version = "1.0.1"
 description = "EVE Online D-scan and local intel TUI — HARUSPEX Proximity Intelligence Platform"
 requires-python = ">=3.11"
 dependencies = [
