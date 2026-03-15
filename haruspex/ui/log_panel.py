@@ -200,12 +200,14 @@ class LogPanel(Static):
         system = self._current_system()
 
         if not cfg.enabled:
+            self.border_title = "[m] MONITORING"
             text = (
                 "[#e8a559]MONITORING DISABLED.[/#e8a559]\n"
                 "Log tailing is not enabled.\n\n"
                 "[#7a756e]~/.config/lazyscan/config.toml[/#7a756e]"
             )
         elif not self._rows:
+            self.border_title = "[m] MONITORING"
             system_line = f"\n[#C15F3C]{system}[/#C15F3C]" if system else ""
             text = (
                 f"[#C15F3C]● MONITORING ACTIVE.[/#C15F3C]{system_line}\n\n"
@@ -218,6 +220,10 @@ class LogPanel(Static):
                 r for r in self._rows.values()
                 if "☠" in r[6] or ("%" in r[6] and _risk_val(r[6]) >= 30)
             ]
+            if flagged:
+                self.border_title = f"[m] MONITORING · {count}  [bold #ff6b6b]☠ {len(flagged)}[/bold #ff6b6b]"
+            else:
+                self.border_title = f"[m] MONITORING · {count}"
             header = f"[#C15F3C]● {system}[/#C15F3C]" if system else "[#C15F3C]● MONITORING ACTIVE.[/#C15F3C]"
             lines = [header, f"[bold]{count}[/bold] [#9a9590]pilots on record[/#9a9590]"]
             if flagged:
@@ -312,6 +318,10 @@ class LogPanel(Static):
         self._refresh_summary()
 
     def _update_system(self, system: str) -> None:
+        # Clear stale intel from the previous system
+        self._rows = {}
+        self._seen_pilots.clear()
+        self._render_rows()
         self.app.sub_title = f"Proximity Intelligence Platform  ·  {system}"
         self.query_one("#log-system-name", Static).update(f"[#C15F3C]{system}[/#C15F3C]")
         self._refresh_summary()
@@ -347,8 +357,13 @@ class LogPanel(Static):
                     self._rows[name] = self._build_row(info, zs)
 
                 self._render_rows()
-            except Exception:
-                pass
+            except Exception as e:
+                if name in self._rows:
+                    self._rows[name] = (
+                        name, f"[#5a5550]err: {type(e).__name__}[/#5a5550]",
+                        "-", "-", "-", "-", "-", "-",
+                    )
+                self._render_rows()
             finally:
                 if self._spin_task:
                     self._spin_task.cancel()

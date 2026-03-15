@@ -7,7 +7,7 @@ from textual.containers import Horizontal, Vertical
 from textual.widgets import Label, Static, TextArea
 from haruspex.ui.widgets import PasteArea, strip_markup
 
-from haruspex.parsers.dscan import DscanResult, filter_by_range, parse
+from haruspex.parsers.dscan import DscanResult, parse
 
 BAR_WIDTH = 16
 BAR_FULL  = "█"
@@ -113,7 +113,7 @@ class DscanPanel(Static):
 
     BINDINGS = [
         Binding("c", "copy_result", "Copy intel", show=True, priority=True),
-        Binding("r", "toggle_range", "On-grid only", show=True, priority=True),
+        Binding("ctrl+r", "clear", "Clear", show=True, priority=True),
     ]
 
     DEFAULT_CSS = """
@@ -218,7 +218,6 @@ class DscanPanel(Static):
 
     def on_mount(self) -> None:
         self._last_result: DscanResult | None = None
-        self._range_filter: bool = False
         self.border_title = "[d] D-SCAN"
         # Both hidden until set_mode is called by the app
         self.query_one("#dscan-summary").display = False
@@ -238,8 +237,10 @@ class DscanPanel(Static):
     def _refresh_summary(self) -> None:
         r = self._last_result
         if not r or r.total_ships == 0:
+            self.border_title = "[d] D-SCAN"
             self.query_one("#dscan-summary", Static).update(self.SUMMARY_EMPTY)
             return
+        self.border_title = f"[d] D-SCAN · {r.total_ships}"
 
         lines = [f"[bold]{r.total_ships}[/bold] [dim]ships[/dim]"]
         lines.append("")
@@ -277,24 +278,19 @@ class DscanPanel(Static):
         r = self._last_result
         if not r:
             return
-        result = filter_by_range(r, 10_000) if self._range_filter else r
-        self.query_one("#results-content", Static).update(_render_result(result))
-        label = self.query_one("#results-label", Label)
-        if self._range_filter:
-            label.update(
-                f"[#C15F3C]d-scan[/#C15F3C]  [dim]·[/dim]  "
-                f"[bold]{result.total_ships}[/bold] [dim]ships  ·  on-grid only[/dim]"
-            )
-        else:
-            label.update(
-                f"[#C15F3C]d-scan[/#C15F3C]  [dim]·[/dim]  "
-                f"[bold]{result.total_ships}[/bold] [dim]ships[/dim]"
-            )
+        self.query_one("#results-content", Static).update(_render_result(r))
+        self.query_one("#results-label", Label).update(
+            f"[#C15F3C]d-scan[/#C15F3C]  [#3a3530]·[/#3a3530]  "
+            f"[bold]{r.total_ships}[/bold] [#9a9590]ships[/#9a9590]"
+        )
         self._refresh_summary()
 
-    def action_toggle_range(self) -> None:
-        self._range_filter = not self._range_filter
-        self._render_result()
+    def action_clear(self) -> None:
+        self.query_one("#paste-area", PasteArea).load_text("")
+        self._last_result = None
+        self.query_one("#results-content", Static).update(self.DISCLAIMER)
+        self.query_one("#results-label", Label).update("proximity assessment")
+        self._refresh_summary()
 
     def action_copy_result(self) -> None:
         r = self._last_result

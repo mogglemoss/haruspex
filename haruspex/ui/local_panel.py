@@ -224,6 +224,7 @@ class LocalPanel(Static):
 
     def _refresh_summary(self) -> None:
         if self._lookup_running:
+            self.border_title = f"[l] LOCAL · [#e8a559]scanning {self._lookup_count}[/#e8a559]"
             text = (
                 f"[#e8a559]ASSESSMENT IN PROGRESS.[/#e8a559]\n"
                 f"HARUSPEX is cross-referencing "
@@ -235,11 +236,16 @@ class LocalPanel(Static):
             return
 
         if not self._rows:
+            self.border_title = "[l] LOCAL"
             self.query_one("#local-summary", Static).update(self.SUMMARY_EMPTY)
             return
 
         count = len(self._rows)
         flagged = [r for r in self._rows if "☠" in r[6] or ("%" in r[6] and _risk_val(r[6]) >= 30)]
+        if flagged:
+            self.border_title = f"[l] LOCAL · {count}  [bold #ff6b6b]☠ {len(flagged)}[/bold #ff6b6b]"
+        else:
+            self.border_title = f"[l] LOCAL · {count}"
         lines = [f"[bold]{count}[/bold] [#9a9590]pilots on record[/#9a9590]"]
 
         if flagged:
