@@ -5,7 +5,7 @@
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-C15F3C)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-3a3530)](LICENSE)
 
-> This is a personal project by [Cormorant Fell](https://evewho.com/character/93594488), proud WiNGSPAN alumni and enthusiastic contributor to New Eden's tradition of dying in wormholes. It works. It has opinions. Some of them are correct.
+> ~~This is a personal project by~~ [Cormorant Fell](https://evewho.com/character/93594488), proud WiNGSPAN alumni and enthusiastic contributor to New Eden's tradition of dying in wormholes. It works. It has opinions. Some of them are correct.
 
 **Proximity Intelligence Platform · DSS-T3 · Capsuleer Edition**
 
@@ -35,7 +35,34 @@ HARUSPEX CONSIDERS THESE FACTS UNRELATED.
 
 ## Installation
 
-Pre-compiled binaries are available on the [Releases page](https://github.com/mogglemoss/haruspex/releases) for macOS (universal), Linux, and Windows. Download, make executable if needed, run. No Python required. No assembly required. No explanation of what a wormhole is required.
+Pre-compiled binaries are available on the [Releases page](https://github.com/mogglemoss/haruspex/releases) for macOS (universal), Linux, and Windows. No Python required. No assembly required. No explanation of what a wormhole is required.
+
+### macOS
+
+Download `haruspex-macos`, then in Terminal:
+
+```bash
+chmod +x ~/Downloads/haruspex-macos
+xattr -d com.apple.quarantine ~/Downloads/haruspex-macos
+~/Downloads/haruspex-macos
+```
+
+`chmod` grants execute permission (required after download). `xattr` clears the Gatekeeper quarantine flag — macOS applies this to all downloaded files; without it the binary will not run. HARUSPEX is not a threat. Gatekeeper has been informed. It remains unconvinced.
+
+This is a terminal application. Do not double-click it in Finder. It will open as a text file. This is not useful.
+
+### Linux
+
+```bash
+chmod +x haruspex-linux
+./haruspex-linux
+```
+
+### Windows
+
+Download `haruspex-windows.exe` and run it from a terminal (Command Prompt or PowerShell). Double-clicking may work, but a terminal window is required for the interface to render. If Windows Defender objects, click "More info" → "Run anyway". HARUSPEX has noted this is not an ideal onboarding experience.
+
+---
 
 **Running from source** — requires Python 3.11+ and [uv](https://docs.astral.sh/uv/):
 
