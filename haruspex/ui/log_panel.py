@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import asyncio
+import re
 from collections import OrderedDict
 from pathlib import Path
 
@@ -14,13 +15,12 @@ from haruspex.config.settings import Config
 from haruspex.enrichers import esi, zkill
 from haruspex.parsers.logs import LogEvent, tail
 from haruspex.ui.local_panel import _sort_key
-from haruspex.ui.widgets import MASCOT, strip_markup
+from haruspex.ui.widgets import strip_markup
 
 COLUMNS = ["Name", "Corp", "Alliance", "Kills", "Loss", "K/D", "Risk", "Tags"]
 
 
 def _risk_val(risk_str: str) -> int:
-    import re
     clean = re.sub(r"\[/?[^\[\]]*\]", "", risk_str)
     try:
         return int(clean.replace("%", "").strip())
@@ -39,9 +39,24 @@ class LogPanel(Static):
 
     DEFAULT_CSS = """
     LogPanel {
-        layout: horizontal;
         height: 1fr;
+        width: 1fr;
         background: #1a1815;
+    }
+
+    LogPanel.overview {
+        border: round #3a3530;
+        padding: 1 2;
+        margin: 1;
+    }
+
+    #log-summary {
+        height: 1fr;
+        color: #7a756e;
+    }
+
+    #log-detail {
+        height: 1fr;
     }
 
     #log-sidebar {
@@ -104,15 +119,6 @@ class LogPanel(Static):
     }
     """
 
-    def __init__(self, config: Config, **kwargs):
-        super().__init__(**kwargs)
-        self._config = config
-        self._tail_task: asyncio.Task | None = None
-        self._spin_task: asyncio.Task | None = None
-        self._enrich_queue: asyncio.Queue = asyncio.Queue()
-        self._seen_pilots: OrderedDict[str, bool] = OrderedDict()  # name -> enriched
-        self._rows: list[tuple] = {}
-
     SPINNER = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
 
     LOG_EMPTY = (
@@ -132,8 +138,18 @@ class LogPanel(Static):
         "HARUSPEX RECOMMENDS TREATING ALL WORMHOLES AS OCCUPIED.[/dim]"
     )
 
+    def __init__(self, config: Config, **kwargs):
+        super().__init__(**kwargs)
+        self._config = config
+        self._tail_task: asyncio.Task | None = None
+        self._spin_task: asyncio.Task | None = None
+        self._enrich_queue: asyncio.Queue = asyncio.Queue()
+        self._seen_pilots: OrderedDict[str, bool] = OrderedDict()  # name -> enriched
+        self._rows: dict[str, tuple] = {}
+
     def compose(self) -> ComposeResult:
-        with Horizontal():
+        yield Static("", id="log-summary")
+        with Horizontal(id="log-detail"):
             with Vertical(id="log-sidebar"):
                 yield Label("live monitoring", id="log-status-label")
                 yield Static("", id="log-system-name")
@@ -150,7 +166,72 @@ class LogPanel(Static):
         table = self.query_one("#log-table", DataTable)
         table.add_columns(*COLUMNS)
         table.display = False
+        self.border_title = "[m] MONITORING"
+        # Both hidden until set_mode is called by the app
+        self.query_one("#log-summary").display = False
+        self.query_one("#log-detail").display = False
         self._apply_config()
+
+    def set_mode(self, mode: str) -> None:
+        is_overview = mode == "overview"
+        if is_overview:
+            self.add_class("overview")
+        else:
+            self.remove_class("overview")
+        self.query_one("#log-summary").display = is_overview
+        self.query_one("#log-detail").display = not is_overview
+        if is_overview:
+            self._refresh_summary()
+
+    def _refresh_summary(self) -> None:
+        cfg = self._config.logs
+        system = self._current_system()
+
+        if not cfg.enabled:
+            text = (
+                "MONITORING DISABLED.\n"
+                "Log tailing is not enabled.\n\n"
+                "[dim]See ~/.config/haruspex/config.toml[/dim]"
+            )
+        elif not self._rows:
+            system_line = f"\n[#C15F3C]{system}[/#C15F3C]" if system else ""
+            text = (
+                f"[#C15F3C]● MONITORING ACTIVE.[/#C15F3C]{system_line}\n\n"
+                "No pilots have spoken.\n\n"
+                "[dim]Silent locals are not safe locals.[/dim]"
+            )
+        else:
+            count = len(self._rows)
+            flagged = [
+                r for r in self._rows.values()
+                if "☠" in r[6] or ("%" in r[6] and _risk_val(r[6]) >= 30)
+            ]
+            header = f"[#C15F3C]● {system}[/#C15F3C]" if system else "[#C15F3C]● MONITORING ACTIVE.[/#C15F3C]"
+            lines = [header, f"[bold]{count}[/bold] [dim]pilots on record[/dim]"]
+            if flagged:
+                lines.append(f"[red]{len(flagged)} flagged[/red]")
+                lines.append("")
+                for r in list(flagged)[:4]:
+                    name = r[0]
+                    risk = strip_markup(r[6])
+                    kills = r[3]
+                    lines.append(f"  [bold]{name}[/bold]  {risk}  [dim]{kills}k[/dim]")
+                if len(flagged) > 4:
+                    lines.append(f"  [dim]… and {len(flagged) - 4} more[/dim]")
+            else:
+                lines.append("[dim]no flagged pilots[/dim]")
+            text = "\n".join(lines)
+
+        self.query_one("#log-summary", Static).update(text)
+
+    def _current_system(self) -> str:
+        try:
+            sub = self.app.sub_title
+            if "·" in sub and "DSS-T3" not in sub:
+                return sub.split("·")[-1].strip()
+        except Exception:
+            pass
+        return ""
 
     def _apply_config(self) -> None:
         cfg = self._config.logs
@@ -158,6 +239,7 @@ class LogPanel(Static):
 
         if not cfg.enabled:
             self._show_setup(log_path)
+            self._refresh_summary()
             return
 
         if log_path is None:
@@ -167,6 +249,7 @@ class LogPanel(Static):
             self.query_one("#enable-hint", Static).update(
                 "[dim]Specify log_path in\n~/.config/lazyscan/config.toml[/dim]"
             )
+            self._refresh_summary()
             return
 
         self._start_tail(log_path)
@@ -207,6 +290,7 @@ class LogPanel(Static):
     def _update_system(self, system: str) -> None:
         self.app.sub_title = f"Proximity Intelligence Platform  ·  {system}"
         self.query_one("#log-system-name", Static).update(f"[#C15F3C]{system}[/#C15F3C]")
+        self._refresh_summary()
 
     async def _on_log_event(self, event: LogEvent) -> None:
         if event.system_changed:
@@ -306,6 +390,7 @@ class LogPanel(Static):
             table.display = False
             empty.display = True
             label.update("personnel assessment")
+        self._refresh_summary()
 
     async def _spinner(self, msg: str) -> None:
         i = 0

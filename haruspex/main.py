@@ -4,7 +4,8 @@ from __future__ import annotations
 from textual import events
 from textual.app import App, ComposeResult
 from textual.binding import Binding
-from textual.widgets import Footer, TabbedContent, TabPane
+from textual.containers import Horizontal
+from textual.widgets import Footer
 
 from haruspex.ui.widgets import HaruspexHeader, PasteArea
 
@@ -41,35 +42,8 @@ class LazyScanApp(App):
         color: $warm-muted;
     }
 
-    TabbedContent {
+    #panels {
         height: 1fr;
-        background: $warm-bg;
-    }
-
-    TabPane {
-        padding: 0;
-        background: $warm-bg;
-    }
-
-    Tabs {
-        background: $warm-surface;
-        border-bottom: tall $warm-border;
-    }
-
-    Tab {
-        color: $warm-muted;
-        background: $warm-surface;
-    }
-
-    Tab:focus, Tab.-active {
-        color: $rust;
-        background: $warm-bg;
-        text-style: bold;
-    }
-
-    Tab:hover {
-        color: $warm-text;
-        background: $warm-panel;
     }
 
     /* Command palette */
@@ -123,31 +97,56 @@ class LazyScanApp(App):
     """
 
     BINDINGS = [
-        Binding("d", "switch_tab('dscan')", "D-Scan", show=True, priority=True),
-        Binding("l", "switch_tab('local')", "Local", show=True, priority=True),
-        Binding("m", "switch_tab('log')", "Monitoring", show=True, priority=True),
+        Binding("d", "focus_panel('dscan')", "D-Scan", show=True, priority=True),
+        Binding("l", "focus_panel('local')", "Local", show=True, priority=True),
+        Binding("m", "focus_panel('log')", "Monitoring", show=True, priority=True),
+        Binding("escape", "exit_fullscreen", "Overview", show=False, priority=True),
         Binding("q", "quit", "Quit", show=True),
     ]
 
     def compose(self) -> ComposeResult:
         self._config = Config.load()
         yield HaruspexHeader()
-        with TabbedContent(initial="dscan"):
-            with TabPane("D-Scan", id="dscan"):
-                yield DscanPanel()
-            with TabPane("Local", id="local"):
-                yield LocalPanel()
-            with TabPane("Live Monitoring", id="log"):
-                yield LogPanel(config=self._config)
+        with Horizontal(id="panels"):
+            yield DscanPanel(id="panel-dscan")
+            yield LocalPanel(id="panel-local")
+            yield LogPanel(config=self._config, id="panel-log")
         yield Footer()
 
-    def action_switch_tab(self, tab_id: str) -> None:
-        self.query_one(TabbedContent).active = tab_id
+    def on_mount(self) -> None:
+        self._fullscreen: str | None = None
+        self._set_overview()
+
+    def action_focus_panel(self, panel_id: str) -> None:
+        if self._fullscreen == panel_id:
+            self._set_overview()
+        else:
+            self._set_fullscreen(panel_id)
+
+    def action_exit_fullscreen(self) -> None:
+        if self._fullscreen:
+            self._set_overview()
+
+    def _set_fullscreen(self, panel_id: str) -> None:
+        self._fullscreen = panel_id
+        for child in self.query_one("#panels").children:
+            if child.id == f"panel-{panel_id}":
+                child.display = True
+                child.set_mode("detail")
+            else:
+                child.display = False
+
+    def _set_overview(self) -> None:
+        self._fullscreen = None
+        for child in self.query_one("#panels").children:
+            child.display = True
+            child.set_mode("overview")
 
     def on_paste(self, event: events.Paste) -> None:
-        """Route paste to the active tab's input area."""
-        active = self.query_one(TabbedContent).active
-        target = {"dscan": "#paste-area", "local": "#local-paste-area"}.get(active)
+        """Route paste to the active panel's input area (detail mode only)."""
+        if not self._fullscreen:
+            return
+        target = {"dscan": "#paste-area", "local": "#local-paste-area"}.get(self._fullscreen)
         if target:
             self.query_one(target, PasteArea).load_text(event.text.strip())
             event.stop()

@@ -5,7 +5,7 @@ from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.containers import Horizontal, Vertical
 from textual.widgets import Label, Static, TextArea
-from haruspex.ui.widgets import MASCOT, PasteArea, strip_markup
+from haruspex.ui.widgets import PasteArea, strip_markup
 
 from haruspex.parsers.dscan import DscanResult, filter_by_range, parse
 
@@ -118,9 +118,24 @@ class DscanPanel(Static):
 
     DEFAULT_CSS = """
     DscanPanel {
-        layout: horizontal;
         height: 1fr;
+        width: 1fr;
         background: #1a1815;
+    }
+
+    DscanPanel.overview {
+        border: round #3a3530;
+        padding: 1 2;
+        margin: 1;
+    }
+
+    #dscan-summary {
+        height: 1fr;
+        color: #7a756e;
+    }
+
+    #dscan-detail {
+        height: 1fr;
     }
 
     #input-pane {
@@ -172,8 +187,15 @@ class DscanPanel(Static):
         "HARUSPEX CONSIDERS THESE FACTS UNRELATED.[/dim]"
     )
 
+    SUMMARY_EMPTY = (
+        "SCAN TELEMETRY ABSENT.\n"
+        "HARUSPEX has nothing to assess.\n\n"
+        "[dim]Press [bold]d[/bold] to submit a scan.[/dim]"
+    )
+
     def compose(self) -> ComposeResult:
-        with Horizontal():
+        yield Static(self.SUMMARY_EMPTY, id="dscan-summary")
+        with Horizontal(id="dscan-detail"):
             with Vertical(id="input-pane"):
                 yield Label("scan telemetry input", id="input-label")
                 yield PasteArea(id="paste-area", language=None)
@@ -184,6 +206,49 @@ class DscanPanel(Static):
     def on_mount(self) -> None:
         self._last_result: DscanResult | None = None
         self._range_filter: bool = False
+        self.border_title = "[d] D-SCAN"
+        # Both hidden until set_mode is called by the app
+        self.query_one("#dscan-summary").display = False
+        self.query_one("#dscan-detail").display = False
+
+    def set_mode(self, mode: str) -> None:
+        is_overview = mode == "overview"
+        if is_overview:
+            self.add_class("overview")
+        else:
+            self.remove_class("overview")
+        self.query_one("#dscan-summary").display = is_overview
+        self.query_one("#dscan-detail").display = not is_overview
+        if is_overview:
+            self._refresh_summary()
+
+    def _refresh_summary(self) -> None:
+        r = self._last_result
+        if not r or r.total_ships == 0:
+            self.query_one("#dscan-summary", Static).update(self.SUMMARY_EMPTY)
+            return
+
+        lines = [f"[bold]{r.total_ships}[/bold] [dim]ships[/dim]"]
+        lines.append("")
+        for cls, label in CLASS_DISPLAY:
+            n = r.counts.get(cls, 0)
+            if n:
+                pct = r.pct(cls)
+                short = label.split()[-1]
+                lines.append(f"  {short:<8}  [bold]{n:>3}[/bold]  [dim]{pct}%[/dim]")
+
+        if r.notable:
+            lines.append("")
+            hulls = "  ·  ".join(f"[#C15F3C]{h}[/#C15F3C]" for h in r.notable)
+            lines.append(f"  {hulls}")
+
+        if r.assessments:
+            lines.append("")
+            for sev, _, txt in r.assessments[:2]:
+                color = _SEVERITY_COLOR.get(sev, "#e8a559")
+                lines.append(f"  [{color}]{txt}[/{color}]")
+
+        self.query_one("#dscan-summary", Static).update("\n".join(lines))
 
     def on_text_area_changed(self, event: TextArea.Changed) -> None:
         text = event.text_area.text
@@ -212,6 +277,7 @@ class DscanPanel(Static):
                 f"[#C15F3C]d-scan[/#C15F3C]  [dim]·[/dim]  "
                 f"[bold]{result.total_ships}[/bold] [dim]ships[/dim]"
             )
+        self._refresh_summary()
 
     def action_toggle_range(self) -> None:
         self._range_filter = not self._range_filter

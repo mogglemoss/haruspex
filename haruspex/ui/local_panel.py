@@ -8,7 +8,7 @@ from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.containers import Horizontal, Vertical
 from textual.widgets import DataTable, Label, Static, TextArea
-from haruspex.ui.widgets import MASCOT, PasteArea, strip_markup
+from haruspex.ui.widgets import PasteArea, strip_markup
 
 from haruspex.enrichers import esi, zkill
 from haruspex.parsers.local import parse
@@ -63,9 +63,24 @@ class LocalPanel(Static):
 
     DEFAULT_CSS = """
     LocalPanel {
-        layout: horizontal;
         height: 1fr;
+        width: 1fr;
         background: #1a1815;
+    }
+
+    LocalPanel.overview {
+        border: round #3a3530;
+        padding: 1 2;
+        margin: 1;
+    }
+
+    #local-summary {
+        height: 1fr;
+        color: #7a756e;
+    }
+
+    #local-detail {
+        height: 1fr;
     }
 
     #local-input-pane {
@@ -149,8 +164,15 @@ class LocalPanel(Static):
         "HARUSPEX CONSIDERS THIS A MATTER BETWEEN YOU AND THEM.[/dim]"
     )
 
+    SUMMARY_EMPTY = (
+        "NO PERSONNEL ON FILE.\n"
+        "HARUSPEX has no one to look up.\n\n"
+        "[dim]Press [bold]l[/bold] to deposit a roster.[/dim]"
+    )
+
     def compose(self) -> ComposeResult:
-        with Horizontal():
+        yield Static(self.SUMMARY_EMPTY, id="local-summary")
+        with Horizontal(id="local-detail"):
             with Vertical(id="local-input-pane"):
                 yield Label("deposit personnel manifest", id="local-input-label")
                 yield PasteArea(id="local-paste-area", language=None)
@@ -171,6 +193,45 @@ class LocalPanel(Static):
         table = self.query_one("#local-table", DataTable)
         table.add_columns(*COLUMNS)
         table.display = False
+        self.border_title = "[l] LOCAL"
+        # Both hidden until set_mode is called by the app
+        self.query_one("#local-summary").display = False
+        self.query_one("#local-detail").display = False
+
+    def set_mode(self, mode: str) -> None:
+        is_overview = mode == "overview"
+        if is_overview:
+            self.add_class("overview")
+        else:
+            self.remove_class("overview")
+        self.query_one("#local-summary").display = is_overview
+        self.query_one("#local-detail").display = not is_overview
+        if is_overview:
+            self._refresh_summary()
+
+    def _refresh_summary(self) -> None:
+        if not self._rows:
+            self.query_one("#local-summary", Static).update(self.SUMMARY_EMPTY)
+            return
+
+        count = len(self._rows)
+        flagged = [r for r in self._rows if "☠" in r[6] or ("%" in r[6] and _risk_val(r[6]) >= 30)]
+        lines = [f"[bold]{count}[/bold] [dim]pilots on record[/dim]"]
+
+        if flagged:
+            lines.append(f"[red]{len(flagged)} flagged[/red]")
+            lines.append("")
+            for r in flagged[:5]:
+                name, _, _, kills, _, _, risk, tags = r
+                risk_clean = strip_markup(risk)
+                tag_str = f"  [{strip_markup(tags)}]" if tags != "-" else ""
+                lines.append(f"  [bold]{name}[/bold]{tag_str}  {risk_clean}  [dim]{kills}k[/dim]")
+            if len(flagged) > 5:
+                lines.append(f"  [dim]… and {len(flagged) - 5} more[/dim]")
+        else:
+            lines.append("[dim]no flagged pilots[/dim]")
+
+        self.query_one("#local-summary", Static).update("\n".join(lines))
 
     def on_text_area_changed(self, event: TextArea.Changed) -> None:
         """Auto-trigger lookup 600ms after the paste settles."""
@@ -300,6 +361,7 @@ class LocalPanel(Static):
             self._render_rows()
             label.update(f"[#C15F3C]personnel assessment[/#C15F3C]  [dim]·[/dim]  [bold]{len(rows)}[/bold] [dim]on record[/dim]")
             self._set_status("")
+            self._refresh_summary()
 
         except Exception as e:
             label.update(f"[red]error: {e}[/red]")
