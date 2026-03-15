@@ -1,0 +1,5 @@
+2,341 km	Loki	Loki
+4,521 km	Sabre	Sabre
+8,103 km	Huginn	Huginn
+14,200 km	Lachesis	Lachesis
+1,250 km	Scimitar	Scimitar

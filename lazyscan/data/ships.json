@@ -1,0 +1,2118 @@
+{
+  "'Augmented' Acolyte": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Augmented' Berserker": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Augmented' Hammerhead": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Augmented' Hobgoblin": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Augmented' Hornet": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Augmented' Ice Harvesting Drone": {
+    "class": "drone",
+    "group": "Mining Drone"
+  },
+  "'Augmented' Infiltrator": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Augmented' Mining Drone": {
+    "class": "drone",
+    "group": "Mining Drone"
+  },
+  "'Augmented' Ogre": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Augmented' Praetor": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Augmented' Valkyrie": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Augmented' Vespa": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Augmented' Warrior": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Augmented' Wasp": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Dunk' Salvage Drone": {
+    "class": "drone",
+    "group": "Salvage Drone"
+  },
+  "'Excavator' Ice Harvesting Drone": {
+    "class": "drone",
+    "group": "Mining Drone"
+  },
+  "'Excavator' Mining Drone": {
+    "class": "drone",
+    "group": "Mining Drone"
+  },
+  "'Integrated' Acolyte": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Integrated' Berserker": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Integrated' Hammerhead": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Integrated' Hobgoblin": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Integrated' Hornet": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Integrated' Infiltrator": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Integrated' Ogre": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Integrated' Praetor": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Integrated' Valkyrie": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Integrated' Vespa": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Integrated' Warrior": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Integrated' Wasp": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "'Subverted' JVN-UC49": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Abaddon": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Absolution": {
+    "class": "combat",
+    "group": "Command Ship"
+  },
+  "Acolyte EV-300": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Acolyte I": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Acolyte II": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Acolyte TD-300": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Adrestia": {
+    "class": "combat",
+    "group": "Heavy Assault Cruiser"
+  },
+  "Aeon": {
+    "class": "combat",
+    "group": "Supercarrier"
+  },
+  "Algos": {
+    "class": "combat",
+    "group": "Destroyer"
+  },
+  "Alligator": {
+    "class": "combat",
+    "group": "Combat Battlecruiser"
+  },
+  "Amarr Shuttle": {
+    "class": "other",
+    "group": "Shuttle"
+  },
+  "Anathema": {
+    "class": "recon",
+    "group": "Covert Ops"
+  },
+  "Anhinga": {
+    "class": "combat",
+    "group": "Attack Battlecruiser"
+  },
+  "Anshar": {
+    "class": "hauler",
+    "group": "Jump Freighter"
+  },
+  "Apocalypse": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Apocalypse Imperial Issue": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Apocalypse Navy Issue": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Apostle": {
+    "class": "logi",
+    "group": "Force Auxiliary"
+  },
+  "Apotheosis": {
+    "class": "other",
+    "group": "Shuttle"
+  },
+  "Aralez": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Arazu": {
+    "class": "recon",
+    "group": "Force Recon Ship"
+  },
+  "Arbitrator": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Archon": {
+    "class": "combat",
+    "group": "Carrier"
+  },
+  "Ares": {
+    "class": "combat",
+    "group": "Interceptor"
+  },
+  "Ark": {
+    "class": "hauler",
+    "group": "Jump Freighter"
+  },
+  "Armageddon": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Armageddon Imperial Issue": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Armageddon Navy Issue": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Ashimmu": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Astarte": {
+    "class": "combat",
+    "group": "Command Ship"
+  },
+  "Astero": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Atron": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Augoror": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Augoror Navy Issue": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Avalanche": {
+    "class": "hauler",
+    "group": "Freighter"
+  },
+  "Avatar": {
+    "class": "combat",
+    "group": "Titan"
+  },
+  "Azariel": {
+    "class": "combat",
+    "group": "Titan"
+  },
+  "Babaroga": {
+    "class": "combat",
+    "group": "Marauder"
+  },
+  "Badger": {
+    "class": "hauler",
+    "group": "Hauler"
+  },
+  "Bane": {
+    "class": "combat",
+    "group": "Dreadnought"
+  },
+  "Bantam": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Barghest": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Basilisk": {
+    "class": "logi",
+    "group": "Logistics"
+  },
+  "Bellicose": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Berserker I": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Berserker II": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Berserker SW-900": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Berserker TP-900": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Bestla": {
+    "class": "combat",
+    "group": "Heavy Assault Cruiser"
+  },
+  "Bestower": {
+    "class": "hauler",
+    "group": "Hauler"
+  },
+  "Bhaalgorn": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Bifrost": {
+    "class": "combat",
+    "group": "Command Destroyer"
+  },
+  "Blackbird": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Boobook": {
+    "class": "other",
+    "group": "Shuttle"
+  },
+  "Bouncer I": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Bouncer II": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Bowhead": {
+    "class": "hauler",
+    "group": "Freighter"
+  },
+  "Breacher": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Broadsword": {
+    "class": "combat",
+    "group": "Heavy Interdictor"
+  },
+  "Brutix": {
+    "class": "combat",
+    "group": "Combat Battlecruiser"
+  },
+  "Brutix Navy Issue": {
+    "class": "combat",
+    "group": "Combat Battlecruiser"
+  },
+  "Burst": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Bustard": {
+    "class": "hauler",
+    "group": "Deep Space Transport"
+  },
+  "Buzzard": {
+    "class": "recon",
+    "group": "Covert Ops"
+  },
+  "Caedes": {
+    "class": "recon",
+    "group": "Covert Ops"
+  },
+  "Caldari Navy Hookbill": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Caldari Navy Hornet": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Caldari Navy Vespa": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Caldari Navy Warden": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Caldari Navy Wasp": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Caldari Shuttle": {
+    "class": "other",
+    "group": "Shuttle"
+  },
+  "Cambion": {
+    "class": "combat",
+    "group": "Assault Frigate"
+  },
+  "Capsule": {
+    "class": "other",
+    "group": "Capsule"
+  },
+  "Capsule - Genolution 'Auroral' 197-variant": {
+    "class": "other",
+    "group": "Capsule"
+  },
+  "Caracal": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Caracal Navy Issue": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Catalyst": {
+    "class": "combat",
+    "group": "Destroyer"
+  },
+  "Catalyst Navy Issue": {
+    "class": "combat",
+    "group": "Destroyer"
+  },
+  "Celestis": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Cenotaph": {
+    "class": "combat",
+    "group": "Combat Battlecruiser"
+  },
+  "Cerberus": {
+    "class": "combat",
+    "group": "Heavy Assault Cruiser"
+  },
+  "Chameleon": {
+    "class": "recon",
+    "group": "Force Recon Ship"
+  },
+  "Charon": {
+    "class": "hauler",
+    "group": "Freighter"
+  },
+  "Cheetah": {
+    "class": "recon",
+    "group": "Covert Ops"
+  },
+  "Chimera": {
+    "class": "combat",
+    "group": "Carrier"
+  },
+  "Chremoas": {
+    "class": "recon",
+    "group": "Covert Ops"
+  },
+  "Civilian Hobgoblin": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Civilian Mining Drone": {
+    "class": "drone",
+    "group": "Mining Drone"
+  },
+  "Claw": {
+    "class": "combat",
+    "group": "Interceptor"
+  },
+  "Claymore": {
+    "class": "combat",
+    "group": "Command Ship"
+  },
+  "Cobra": {
+    "class": "recon",
+    "group": "Force Recon Ship"
+  },
+  "Coercer": {
+    "class": "combat",
+    "group": "Destroyer"
+  },
+  "Coercer Navy Issue": {
+    "class": "combat",
+    "group": "Destroyer"
+  },
+  "Condor": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Confessor": {
+    "class": "combat",
+    "group": "Tactical Destroyer"
+  },
+  "Corax": {
+    "class": "combat",
+    "group": "Destroyer"
+  },
+  "Cormorant": {
+    "class": "combat",
+    "group": "Destroyer"
+  },
+  "Cormorant Navy Issue": {
+    "class": "combat",
+    "group": "Destroyer"
+  },
+  "Council Diplomatic Shuttle": {
+    "class": "other",
+    "group": "Shuttle"
+  },
+  "Crane": {
+    "class": "hauler",
+    "group": "Blockade Runner"
+  },
+  "Crow": {
+    "class": "combat",
+    "group": "Interceptor"
+  },
+  "Crucifier": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Crucifier Navy Issue": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Cruor": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Crusader": {
+    "class": "combat",
+    "group": "Interceptor"
+  },
+  "Curator I": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Curator II": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Curse": {
+    "class": "recon",
+    "group": "Combat Recon Ship"
+  },
+  "Cybele": {
+    "class": "combat",
+    "group": "Heavy Assault Cruiser"
+  },
+  "Cyclone": {
+    "class": "combat",
+    "group": "Combat Battlecruiser"
+  },
+  "Cyclone Fleet Issue": {
+    "class": "combat",
+    "group": "Combat Battlecruiser"
+  },
+  "Cynabal": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Dagon": {
+    "class": "logi",
+    "group": "Force Auxiliary"
+  },
+  "Damavik": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Damnation": {
+    "class": "combat",
+    "group": "Command Ship"
+  },
+  "Daredevil": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Deacon": {
+    "class": "logi",
+    "group": "Logistics Frigate"
+  },
+  "Deimos": {
+    "class": "combat",
+    "group": "Heavy Assault Cruiser"
+  },
+  "Deluge": {
+    "class": "hauler",
+    "group": "Blockade Runner"
+  },
+  "Devoter": {
+    "class": "combat",
+    "group": "Heavy Interdictor"
+  },
+  "Dominix": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Dominix Navy Issue": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Dragoon": {
+    "class": "combat",
+    "group": "Destroyer"
+  },
+  "Drake": {
+    "class": "combat",
+    "group": "Combat Battlecruiser"
+  },
+  "Drake Navy Issue": {
+    "class": "combat",
+    "group": "Combat Battlecruiser"
+  },
+  "Dramiel": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Draugur": {
+    "class": "combat",
+    "group": "Command Destroyer"
+  },
+  "Drekavac": {
+    "class": "combat",
+    "group": "Combat Battlecruiser"
+  },
+  "Eagle": {
+    "class": "combat",
+    "group": "Heavy Assault Cruiser"
+  },
+  "Echelon": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Echo": {
+    "class": "other",
+    "group": "Corvette"
+  },
+  "Endurance": {
+    "class": "other",
+    "group": "Expedition Frigate"
+  },
+  "Enforcer": {
+    "class": "recon",
+    "group": "Force Recon Ship"
+  },
+  "Enyo": {
+    "class": "combat",
+    "group": "Assault Frigate"
+  },
+  "Eos": {
+    "class": "combat",
+    "group": "Command Ship"
+  },
+  "Epithal": {
+    "class": "hauler",
+    "group": "Hauler"
+  },
+  "Erebus": {
+    "class": "combat",
+    "group": "Titan"
+  },
+  "Eris": {
+    "class": "combat",
+    "group": "Interdictor"
+  },
+  "Etana": {
+    "class": "logi",
+    "group": "Logistics"
+  },
+  "Executioner": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Exequror": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Exequror Navy Issue": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Falcon": {
+    "class": "recon",
+    "group": "Force Recon Ship"
+  },
+  "Federation Navy Comet": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Federation Navy Garde": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Federation Navy Hammerhead": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Federation Navy Hobgoblin": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Federation Navy Ogre": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Fenrir": {
+    "class": "hauler",
+    "group": "Freighter"
+  },
+  "Ferox": {
+    "class": "combat",
+    "group": "Combat Battlecruiser"
+  },
+  "Ferox Navy Issue": {
+    "class": "combat",
+    "group": "Combat Battlecruiser"
+  },
+  "Fiend": {
+    "class": "combat",
+    "group": "Heavy Interdictor"
+  },
+  "Flycatcher": {
+    "class": "combat",
+    "group": "Interdictor"
+  },
+  "Freki": {
+    "class": "combat",
+    "group": "Assault Frigate"
+  },
+  "Gallente Shuttle": {
+    "class": "other",
+    "group": "Shuttle"
+  },
+  "Garde I": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Garde II": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Garmur": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Gecko": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Geri": {
+    "class": "combat",
+    "group": "Assault Frigate"
+  },
+  "Gila": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Gnosis": {
+    "class": "combat",
+    "group": "Combat Battlecruiser"
+  },
+  "Gold Magnate": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Golem": {
+    "class": "combat",
+    "group": "Marauder"
+  },
+  "Goru's Shuttle": {
+    "class": "other",
+    "group": "Shuttle"
+  },
+  "Griffin": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Griffin Navy Issue": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Guardian": {
+    "class": "logi",
+    "group": "Logistics"
+  },
+  "Guardian-Vexor": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Guristas Shuttle": {
+    "class": "other",
+    "group": "Shuttle"
+  },
+  "Hammerhead I": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Hammerhead II": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Hammerhead SD-600": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Harbinger": {
+    "class": "combat",
+    "group": "Combat Battlecruiser"
+  },
+  "Harbinger Navy Issue": {
+    "class": "combat",
+    "group": "Combat Battlecruiser"
+  },
+  "Harpy": {
+    "class": "combat",
+    "group": "Assault Frigate"
+  },
+  "Harvester Mining Drone": {
+    "class": "drone",
+    "group": "Mining Drone"
+  },
+  "Hawk": {
+    "class": "combat",
+    "group": "Assault Frigate"
+  },
+  "Heavy Armor Maintenance Bot I": {
+    "class": "drone",
+    "group": "Logistics Drone"
+  },
+  "Heavy Armor Maintenance Bot II": {
+    "class": "drone",
+    "group": "Logistics Drone"
+  },
+  "Heavy Hull Maintenance Bot I": {
+    "class": "drone",
+    "group": "Logistics Drone"
+  },
+  "Heavy Hull Maintenance Bot II": {
+    "class": "drone",
+    "group": "Logistics Drone"
+  },
+  "Heavy Mutated Drone": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Heavy Shield Maintenance Bot I": {
+    "class": "drone",
+    "group": "Logistics Drone"
+  },
+  "Heavy Shield Maintenance Bot II": {
+    "class": "drone",
+    "group": "Logistics Drone"
+  },
+  "Hecate": {
+    "class": "combat",
+    "group": "Tactical Destroyer"
+  },
+  "Hel": {
+    "class": "combat",
+    "group": "Supercarrier"
+  },
+  "Helios": {
+    "class": "recon",
+    "group": "Covert Ops"
+  },
+  "Hematos": {
+    "class": "other",
+    "group": "Corvette"
+  },
+  "Heretic": {
+    "class": "combat",
+    "group": "Interdictor"
+  },
+  "Heron": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Heron Navy Issue": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Hoarder": {
+    "class": "hauler",
+    "group": "Hauler"
+  },
+  "Hobgoblin I": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Hobgoblin II": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Hobgoblin SD-300": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Hornet EC-300": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Hornet I": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Hornet II": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Hound": {
+    "class": "combat",
+    "group": "Stealth Bomber"
+  },
+  "Hubris": {
+    "class": "combat",
+    "group": "Dreadnought"
+  },
+  "Huginn": {
+    "class": "recon",
+    "group": "Combat Recon Ship"
+  },
+  "Hulk": {
+    "class": "other",
+    "group": "Exhumer"
+  },
+  "Hurricane": {
+    "class": "combat",
+    "group": "Combat Battlecruiser"
+  },
+  "Hurricane Fleet Issue": {
+    "class": "combat",
+    "group": "Combat Battlecruiser"
+  },
+  "Hydra": {
+    "class": "recon",
+    "group": "Covert Ops"
+  },
+  "Hyena": {
+    "class": "combat",
+    "group": "Electronic Attack Ship"
+  },
+  "Hyperion": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Ibis": {
+    "class": "other",
+    "group": "Corvette"
+  },
+  "Ice Harvesting Drone I": {
+    "class": "drone",
+    "group": "Mining Drone"
+  },
+  "Ice Harvesting Drone II": {
+    "class": "drone",
+    "group": "Mining Drone"
+  },
+  "Ikitursa": {
+    "class": "combat",
+    "group": "Heavy Assault Cruiser"
+  },
+  "Imicus": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Imicus Navy Issue": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Immolator": {
+    "class": "other",
+    "group": "Corvette"
+  },
+  "Imp": {
+    "class": "combat",
+    "group": "Interceptor"
+  },
+  "Impairor": {
+    "class": "other",
+    "group": "Corvette"
+  },
+  "Impel": {
+    "class": "hauler",
+    "group": "Deep Space Transport"
+  },
+  "Imperial Navy Acolyte": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Imperial Navy Curator": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Imperial Navy Infiltrator": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Imperial Navy Praetor": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Imperial Navy Slicer": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Incursus": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Infiltrator EV-600": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Infiltrator I": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Infiltrator II": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Infiltrator TD-600": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Inquisitor": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "InterBus Shuttle": {
+    "class": "other",
+    "group": "Shuttle"
+  },
+  "Ishkur": {
+    "class": "combat",
+    "group": "Assault Frigate"
+  },
+  "Ishtar": {
+    "class": "combat",
+    "group": "Heavy Assault Cruiser"
+  },
+  "Iteron Mark V": {
+    "class": "hauler",
+    "group": "Hauler"
+  },
+  "Jackdaw": {
+    "class": "combat",
+    "group": "Tactical Destroyer"
+  },
+  "Jaguar": {
+    "class": "combat",
+    "group": "Assault Frigate"
+  },
+  "Karura": {
+    "class": "combat",
+    "group": "Dreadnought"
+  },
+  "Keres": {
+    "class": "combat",
+    "group": "Electronic Attack Ship"
+  },
+  "Kestrel": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Khizriel": {
+    "class": "combat",
+    "group": "Combat Battlecruiser"
+  },
+  "Kikimora": {
+    "class": "combat",
+    "group": "Destroyer"
+  },
+  "Kirin": {
+    "class": "logi",
+    "group": "Logistics Frigate"
+  },
+  "Kitsune": {
+    "class": "combat",
+    "group": "Electronic Attack Ship"
+  },
+  "Komodo": {
+    "class": "combat",
+    "group": "Titan"
+  },
+  "Kronos": {
+    "class": "combat",
+    "group": "Marauder"
+  },
+  "Kryos": {
+    "class": "hauler",
+    "group": "Hauler"
+  },
+  "Lachesis": {
+    "class": "recon",
+    "group": "Combat Recon Ship"
+  },
+  "Laelaps": {
+    "class": "combat",
+    "group": "Heavy Interdictor"
+  },
+  "Legion": {
+    "class": "combat",
+    "group": "Strategic Cruiser"
+  },
+  "Leopard": {
+    "class": "other",
+    "group": "Shuttle"
+  },
+  "Leshak": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Leviathan": {
+    "class": "combat",
+    "group": "Titan"
+  },
+  "Lif": {
+    "class": "logi",
+    "group": "Force Auxiliary"
+  },
+  "Light Armor Maintenance Bot I": {
+    "class": "drone",
+    "group": "Logistics Drone"
+  },
+  "Light Armor Maintenance Bot II": {
+    "class": "drone",
+    "group": "Logistics Drone"
+  },
+  "Light Hull Maintenance Bot I": {
+    "class": "drone",
+    "group": "Logistics Drone"
+  },
+  "Light Hull Maintenance Bot II": {
+    "class": "drone",
+    "group": "Logistics Drone"
+  },
+  "Light Mutated Drone": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Light Shield Maintenance Bot I": {
+    "class": "drone",
+    "group": "Logistics Drone"
+  },
+  "Light Shield Maintenance Bot II": {
+    "class": "drone",
+    "group": "Logistics Drone"
+  },
+  "Loggerhead": {
+    "class": "logi",
+    "group": "Force Auxiliary"
+  },
+  "Loki": {
+    "class": "combat",
+    "group": "Strategic Cruiser"
+  },
+  "Machariel": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Mackinaw": {
+    "class": "other",
+    "group": "Exhumer"
+  },
+  "Maelstrom": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Magnate": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Magnate Navy Issue": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Magus": {
+    "class": "combat",
+    "group": "Command Destroyer"
+  },
+  "Malediction": {
+    "class": "combat",
+    "group": "Interceptor"
+  },
+  "Malice": {
+    "class": "combat",
+    "group": "Assault Frigate"
+  },
+  "Maller": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Mamba": {
+    "class": "combat",
+    "group": "Destroyer"
+  },
+  "Mammoth": {
+    "class": "hauler",
+    "group": "Hauler"
+  },
+  "Manticore": {
+    "class": "combat",
+    "group": "Stealth Bomber"
+  },
+  "Marshal": {
+    "class": "combat",
+    "group": "Black Ops"
+  },
+  "Mastodon": {
+    "class": "hauler",
+    "group": "Deep Space Transport"
+  },
+  "Maulus": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Maulus Navy Issue": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Medium Armor Maintenance Bot I": {
+    "class": "drone",
+    "group": "Logistics Drone"
+  },
+  "Medium Armor Maintenance Bot II": {
+    "class": "drone",
+    "group": "Logistics Drone"
+  },
+  "Medium Hull Maintenance Bot I": {
+    "class": "drone",
+    "group": "Logistics Drone"
+  },
+  "Medium Hull Maintenance Bot II": {
+    "class": "drone",
+    "group": "Logistics Drone"
+  },
+  "Medium Mutated Drone": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Medium Shield Maintenance Bot I": {
+    "class": "drone",
+    "group": "Logistics Drone"
+  },
+  "Medium Shield Maintenance Bot II": {
+    "class": "drone",
+    "group": "Logistics Drone"
+  },
+  "Megathron": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Megathron Federate Issue": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Megathron Navy Issue": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Mekubal": {
+    "class": "combat",
+    "group": "Destroyer"
+  },
+  "Merlin": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Metamorphosis": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Miasmos": {
+    "class": "hauler",
+    "group": "Hauler"
+  },
+  "Miasmos Amastris Edition": {
+    "class": "hauler",
+    "group": "Hauler"
+  },
+  "Miasmos Quafe Ultra Edition": {
+    "class": "hauler",
+    "group": "Hauler"
+  },
+  "Miasmos Quafe Ultramarine Edition": {
+    "class": "hauler",
+    "group": "Hauler"
+  },
+  "Mimir": {
+    "class": "combat",
+    "group": "Heavy Assault Cruiser"
+  },
+  "Mining Drone I": {
+    "class": "drone",
+    "group": "Mining Drone"
+  },
+  "Mining Drone II": {
+    "class": "drone",
+    "group": "Mining Drone"
+  },
+  "Minmatar Shuttle": {
+    "class": "other",
+    "group": "Shuttle"
+  },
+  "Minokawa": {
+    "class": "logi",
+    "group": "Force Auxiliary"
+  },
+  "Moa": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Molok": {
+    "class": "combat",
+    "group": "Titan"
+  },
+  "Monitor": {
+    "class": "combat",
+    "group": "Flag Cruiser"
+  },
+  "Moracha": {
+    "class": "recon",
+    "group": "Force Recon Ship"
+  },
+  "Muninn": {
+    "class": "combat",
+    "group": "Heavy Assault Cruiser"
+  },
+  "Mutated 'Excavator' Ice Harvesting Drone": {
+    "class": "drone",
+    "group": "Mining Drone"
+  },
+  "Mutated 'Excavator' Mining Drone": {
+    "class": "drone",
+    "group": "Mining Drone"
+  },
+  "Mutated Ice Harvesting Drone": {
+    "class": "drone",
+    "group": "Mining Drone"
+  },
+  "Mutated Mining Drone": {
+    "class": "drone",
+    "group": "Mining Drone"
+  },
+  "Myrmidon": {
+    "class": "combat",
+    "group": "Combat Battlecruiser"
+  },
+  "Myrmidon Navy Issue": {
+    "class": "combat",
+    "group": "Combat Battlecruiser"
+  },
+  "Naga": {
+    "class": "combat",
+    "group": "Attack Battlecruiser"
+  },
+  "Navitas": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Nemesis": {
+    "class": "combat",
+    "group": "Stealth Bomber"
+  },
+  "Nereus": {
+    "class": "hauler",
+    "group": "Hauler"
+  },
+  "Nergal": {
+    "class": "combat",
+    "group": "Assault Frigate"
+  },
+  "Nestor": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Nidhoggur": {
+    "class": "combat",
+    "group": "Carrier"
+  },
+  "Nighthawk": {
+    "class": "combat",
+    "group": "Command Ship"
+  },
+  "Nightmare": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Ninazu": {
+    "class": "logi",
+    "group": "Force Auxiliary"
+  },
+  "Noctis": {
+    "class": "hauler",
+    "group": "Hauler"
+  },
+  "Nomad": {
+    "class": "hauler",
+    "group": "Jump Freighter"
+  },
+  "Nyx": {
+    "class": "combat",
+    "group": "Supercarrier"
+  },
+  "Obelisk": {
+    "class": "hauler",
+    "group": "Freighter"
+  },
+  "Occator": {
+    "class": "hauler",
+    "group": "Deep Space Transport"
+  },
+  "Odysseus": {
+    "class": "combat",
+    "group": "Expedition Command Ship"
+  },
+  "Ogre I": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Ogre II": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Ogre SD-900": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Omen": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Omen Navy Issue": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Oneiros": {
+    "class": "logi",
+    "group": "Logistics"
+  },
+  "Onyx": {
+    "class": "combat",
+    "group": "Heavy Interdictor"
+  },
+  "Opux Luxury Yacht": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Oracle": {
+    "class": "combat",
+    "group": "Attack Battlecruiser"
+  },
+  "Orca": {
+    "class": "hauler",
+    "group": "Industrial Command Ship"
+  },
+  "Orthrus": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Osprey": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Osprey Navy Issue": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Outrider": {
+    "class": "combat",
+    "group": "Command Destroyer"
+  },
+  "Pacifier": {
+    "class": "recon",
+    "group": "Covert Ops"
+  },
+  "Paladin": {
+    "class": "combat",
+    "group": "Marauder"
+  },
+  "Panther": {
+    "class": "combat",
+    "group": "Black Ops"
+  },
+  "Perseverance": {
+    "class": "combat",
+    "group": "Destroyer"
+  },
+  "Phantasm": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Phobos": {
+    "class": "combat",
+    "group": "Heavy Interdictor"
+  },
+  "Pilgrim": {
+    "class": "recon",
+    "group": "Force Recon Ship"
+  },
+  "Pioneer": {
+    "class": "combat",
+    "group": "Destroyer"
+  },
+  "Pioneer Consortium Issue": {
+    "class": "combat",
+    "group": "Destroyer"
+  },
+  "Pontifex": {
+    "class": "combat",
+    "group": "Command Destroyer"
+  },
+  "Porpoise": {
+    "class": "hauler",
+    "group": "Industrial Command Ship"
+  },
+  "Praetor EV-900": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Praetor I": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Praetor II": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Praetor TD-900": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Praxis": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Primae": {
+    "class": "hauler",
+    "group": "Hauler"
+  },
+  "Probe": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Probe Fleet Issue": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Prophecy": {
+    "class": "combat",
+    "group": "Combat Battlecruiser"
+  },
+  "Prophecy Navy Issue": {
+    "class": "combat",
+    "group": "Combat Battlecruiser"
+  },
+  "Prorator": {
+    "class": "hauler",
+    "group": "Blockade Runner"
+  },
+  "Prospect": {
+    "class": "other",
+    "group": "Expedition Frigate"
+  },
+  "Proteus": {
+    "class": "combat",
+    "group": "Strategic Cruiser"
+  },
+  "Providence": {
+    "class": "hauler",
+    "group": "Freighter"
+  },
+  "Prowler": {
+    "class": "hauler",
+    "group": "Blockade Runner"
+  },
+  "Punisher": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Purifier": {
+    "class": "combat",
+    "group": "Stealth Bomber"
+  },
+  "Python": {
+    "class": "combat",
+    "group": "Black Ops"
+  },
+  "Rabisu": {
+    "class": "logi",
+    "group": "Logistics"
+  },
+  "Ragnarok": {
+    "class": "combat",
+    "group": "Titan"
+  },
+  "Raiju": {
+    "class": "combat",
+    "group": "Electronic Attack Ship"
+  },
+  "Rapier": {
+    "class": "recon",
+    "group": "Force Recon Ship"
+  },
+  "Raptor": {
+    "class": "combat",
+    "group": "Interceptor"
+  },
+  "Rattlesnake": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Raven": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Raven Navy Issue": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Raven State Issue": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Reaper": {
+    "class": "other",
+    "group": "Corvette"
+  },
+  "Redeemer": {
+    "class": "combat",
+    "group": "Black Ops"
+  },
+  "Republic Fleet Berserker": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Republic Fleet Bouncer": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Republic Fleet Firetail": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Republic Fleet Valkyrie": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Republic Fleet Warrior": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Retribution": {
+    "class": "combat",
+    "group": "Assault Frigate"
+  },
+  "Revenant": {
+    "class": "combat",
+    "group": "Supercarrier"
+  },
+  "Rhea": {
+    "class": "hauler",
+    "group": "Jump Freighter"
+  },
+  "Rifter": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Rodiva": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Rokh": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Rook": {
+    "class": "recon",
+    "group": "Combat Recon Ship"
+  },
+  "Rorqual": {
+    "class": "hauler",
+    "group": "Capital Industrial Ship"
+  },
+  "Rupture": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Sabre": {
+    "class": "combat",
+    "group": "Interdictor"
+  },
+  "Sacrilege": {
+    "class": "combat",
+    "group": "Heavy Assault Cruiser"
+  },
+  "Salvage Drone I": {
+    "class": "drone",
+    "group": "Salvage Drone"
+  },
+  "Salvage Drone II": {
+    "class": "drone",
+    "group": "Salvage Drone"
+  },
+  "Scalpel": {
+    "class": "logi",
+    "group": "Logistics Frigate"
+  },
+  "Scimitar": {
+    "class": "logi",
+    "group": "Logistics"
+  },
+  "Scorpion": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Scorpion Navy Issue": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Scythe": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Scythe Fleet Issue": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Sentinel": {
+    "class": "combat",
+    "group": "Electronic Attack Ship"
+  },
+  "Sentry Mutated Drone": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Shapash": {
+    "class": "combat",
+    "group": "Assault Frigate"
+  },
+  "Sidewinder": {
+    "class": "recon",
+    "group": "Covert Ops"
+  },
+  "Sigil": {
+    "class": "hauler",
+    "group": "Hauler"
+  },
+  "Silver Magnate": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Sin": {
+    "class": "combat",
+    "group": "Black Ops"
+  },
+  "Skiff": {
+    "class": "other",
+    "group": "Exhumer"
+  },
+  "Skua": {
+    "class": "combat",
+    "group": "Tactical Destroyer"
+  },
+  "Skybreaker": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Slasher": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Sleipnir": {
+    "class": "combat",
+    "group": "Command Ship"
+  },
+  "Squall": {
+    "class": "hauler",
+    "group": "Hauler"
+  },
+  "Stabber": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Stabber Fleet Issue": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Stiletto": {
+    "class": "combat",
+    "group": "Interceptor"
+  },
+  "Stork": {
+    "class": "combat",
+    "group": "Command Destroyer"
+  },
+  "Stormbringer": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Stratios": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Stratios Emergency Responder": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Succubus": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Sunesis": {
+    "class": "combat",
+    "group": "Destroyer"
+  },
+  "Svipul": {
+    "class": "combat",
+    "group": "Tactical Destroyer"
+  },
+  "Taipan": {
+    "class": "other",
+    "group": "Corvette"
+  },
+  "Talos": {
+    "class": "combat",
+    "group": "Attack Battlecruiser"
+  },
+  "Talwar": {
+    "class": "combat",
+    "group": "Destroyer"
+  },
+  "Taranis": {
+    "class": "combat",
+    "group": "Interceptor"
+  },
+  "Tayra": {
+    "class": "hauler",
+    "group": "Hauler"
+  },
+  "Tempest": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Tempest Fleet Issue": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Tempest Tribal Issue": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Tengu": {
+    "class": "combat",
+    "group": "Strategic Cruiser"
+  },
+  "Thalia": {
+    "class": "logi",
+    "group": "Logistics Frigate"
+  },
+  "Thanatos": {
+    "class": "combat",
+    "group": "Carrier"
+  },
+  "Tholos": {
+    "class": "combat",
+    "group": "Destroyer"
+  },
+  "Thorax": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Thrasher": {
+    "class": "combat",
+    "group": "Destroyer"
+  },
+  "Thrasher Fleet Issue": {
+    "class": "combat",
+    "group": "Destroyer"
+  },
+  "Thunderchild": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Tiamat": {
+    "class": "recon",
+    "group": "Force Recon Ship"
+  },
+  "Tormentor": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Tornado": {
+    "class": "combat",
+    "group": "Attack Battlecruiser"
+  },
+  "Torrent": {
+    "class": "hauler",
+    "group": "Deep Space Transport"
+  },
+  "Tristan": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Typhoon": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Typhoon Fleet Issue": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Utu": {
+    "class": "combat",
+    "group": "Assault Frigate"
+  },
+  "Vagabond": {
+    "class": "combat",
+    "group": "Heavy Assault Cruiser"
+  },
+  "Valkyrie I": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Valkyrie II": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Valkyrie SW-600": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Valkyrie TP-600": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Valravn": {
+    "class": "combat",
+    "group": "Dreadnought"
+  },
+  "Vangel": {
+    "class": "combat",
+    "group": "Heavy Assault Cruiser"
+  },
+  "Vanquisher": {
+    "class": "combat",
+    "group": "Titan"
+  },
+  "Vargur": {
+    "class": "combat",
+    "group": "Marauder"
+  },
+  "Vedmak": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Velator": {
+    "class": "other",
+    "group": "Corvette"
+  },
+  "Vendetta": {
+    "class": "combat",
+    "group": "Supercarrier"
+  },
+  "Vengeance": {
+    "class": "combat",
+    "group": "Assault Frigate"
+  },
+  "Venture": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Venture Consortium Issue": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Vespa EC-600": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Vespa I": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Vespa II": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Vexor": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Vexor Navy Issue": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Viator": {
+    "class": "hauler",
+    "group": "Blockade Runner"
+  },
+  "Victor": {
+    "class": "recon",
+    "group": "Force Recon Ship"
+  },
+  "Victorieux Luxury Yacht": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Vigil": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Vigil Fleet Issue": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Vigilant": {
+    "class": "combat",
+    "group": "Cruiser"
+  },
+  "Vindicator": {
+    "class": "combat",
+    "group": "Battleship"
+  },
+  "Violator": {
+    "class": "other",
+    "group": "Corvette"
+  },
+  "Virtuoso": {
+    "class": "combat",
+    "group": "Stealth Bomber"
+  },
+  "Vulture": {
+    "class": "combat",
+    "group": "Command Ship"
+  },
+  "Warden I": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Warden II": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Warrior I": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Warrior II": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Warrior SW-300": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Warrior TP-300": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Wasp EC-900": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Wasp I": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Wasp II": {
+    "class": "drone",
+    "group": "Combat Drone"
+  },
+  "Whiptail": {
+    "class": "combat",
+    "group": "Interceptor"
+  },
+  "Widow": {
+    "class": "combat",
+    "group": "Black Ops"
+  },
+  "Wolf": {
+    "class": "combat",
+    "group": "Assault Frigate"
+  },
+  "Worm": {
+    "class": "combat",
+    "group": "Frigate"
+  },
+  "Wreathe": {
+    "class": "hauler",
+    "group": "Hauler"
+  },
+  "Wyvern": {
+    "class": "combat",
+    "group": "Supercarrier"
+  },
+  "Zarmazd": {
+    "class": "logi",
+    "group": "Logistics"
+  },
+  "Zealot": {
+    "class": "combat",
+    "group": "Heavy Assault Cruiser"
+  },
+  "Zephyr": {
+    "class": "other",
+    "group": "Prototype Exploration Ship"
+  }
+}
