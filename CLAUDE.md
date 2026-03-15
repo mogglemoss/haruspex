@@ -1,7 +1,7 @@
-# lazyscan
+# HARUSPEX
 
 EVE Online D-scan and local intel TUI. Terminal-based, runs on a second monitor
-alongside the game. Paste D-scan or local chat output, get instant threat analysis
+alongside the game. Paste D-scan or local chat output for instant threat analysis
 and character intel. Optionally tail live log files for automatic enrichment.
 
 ## Stack
@@ -10,112 +10,96 @@ and character intel. Optionally tail live log files for automatic enrichment.
 - **TUI framework:** Textual (https://textual.textualize.io)
 - **HTTP:** httpx (async)
 - **Package manager:** uv
+- **Distribution:** PyInstaller (single-file binaries via GitHub Actions)
 
 ## Project structure
 
 ```
-lazyscan/
+haruspex/                        ← repo root (local folder may differ)
 ├── CLAUDE.md
 ├── pyproject.toml
 ├── README.md
-├── lazyscan/
+├── haruspex.spec                # PyInstaller build spec
+├── .github/
+│   └── workflows/
+│       └── build.yml            # Matrix build: Linux, Windows, macOS universal
+├── haruspex/
 │   ├── __init__.py
-│   ├── main.py          # Textual app entry point
+│   ├── main.py                  # Textual app entry point (LazyScanApp)
+│   ├── config/
+│   │   └── settings.py          # Config dataclass, TOML load/save
 │   ├── parsers/
-│   │   ├── dscan.py     # D-scan text parser
-│   │   ├── local.py     # Local chat roster parser
-│   │   └── logs.py      # EVE log file tail/parser
+│   │   ├── dscan.py             # D-scan clipboard parser
+│   │   ├── local.py             # Local chat roster parser
+│   │   └── logs.py              # EVE chatlog tail/parser (UTF-16LE)
 │   ├── enrichers/
-│   │   ├── sde.py       # Static Data Export ship lookups
-│   │   ├── esi.py       # ESI API character/type resolution
-│   │   └── zkill.py     # zKillboard kill stats
+│   │   ├── esi.py               # ESI character/corp/alliance resolution
+│   │   └── zkill.py             # zKillboard kill stats + WH corp detection
 │   ├── ui/
-│   │   ├── dscan_panel.py
-│   │   ├── local_panel.py
-│   │   └── log_panel.py
+│   │   ├── widgets.py           # HaruspexHeader, PasteArea, mascot animation
+│   │   ├── dscan_panel.py       # D-scan panel
+│   │   ├── local_panel.py       # Local intel panel
+│   │   ├── log_panel.py         # Live monitoring panel
+│   │   └── help_screen.py       # ? help overlay (ModalScreen)
 │   └── data/
-│       └── ships.json   # Bundled SDE ship data (name → class/group)
+│       └── ships.json           # Bundled SDE ship data (name → class/group)
 └── tests/
-    └── fixtures/        # Sample D-scan and local chat text for testing
+    └── fixtures/                # Sample D-scan and local chat text
 ```
 
-## Phases
+## Layout
 
-### Phase 1 — D-scan parser (offline, no network required)
-- Parse raw D-scan clipboard text (tab-separated: distance, name, type)
-- Ship class lookup against bundled ships.json (from EVE SDE)
-- Summary: combat/recon/logi/hauler/structure/drone counts + percentages
-- Notable hull flagging (Stratios, Loki, Sabre, Redeemer, combat recons, etc.)
-- Threat assessment label (solo, small gang, fleet, structures only, etc.)
-- Textual TUI with paste input pane + results pane
-- Keybindings: [d] dscan mode, [l] local mode, [tab] switch panes, [q] quit
+btop-style overview / fullscreen. All three panels visible in overview as cards;
+pressing `d`, `l`, or `m` expands that panel to fullscreen. `Esc` returns to overview.
 
-### Phase 2 — Local intel (requires network)
-- Paste local chat roster (character names, one per line)
-- ESI bulk name→ID resolution (/universe/ids/)
-- zKillboard API stats per character (async, concurrent, rate-limited)
-- Display: name, corp/alliance, kill count, loss count, last active, dangerous flag
-- WH-aware: flag known wormhole corps and hunters
-- WiNGSPAN Delivery Services corp/alliance recognition
+Each panel has two modes:
+- **overview** — compact summary card with border, click to expand
+- **detail** — full input + results layout
 
-### Phase 3 — Live log tail
-- Watch ~/Documents/EVE/logs/Chatlogs/Local_*.txt in real time (UTF-16LE)
-- Auto-trigger ESI+zKillboard lookup when new pilot appears in local
+`main.py` tracks `_fullscreen: str | None` and calls `panel.set_mode("overview"|"detail")`.
+`check_action` hides `Esc` from the footer when already in overview, hides the app-level
+`c` (copy overview) when in detail mode (panels own `c` in detail).
 
-## Data sources
+## Keybindings
 
-| Source | Usage | Auth |
-|--------|-------|------|
-| Bundled ships.json | Ship name → class/group lookup | None |
-| ESI /universe/ids/ | Bulk name→ID resolution | None |
-| ESI /universe/types/{id}/ | Ship type details | None |
-| zKillboard API | Character kill stats | None |
-| ~/Documents/EVE/logs/ | Live log tailing | Local file read |
+| Key | Action |
+|-----|--------|
+| `d` / `l` / `m` | Open D-Scan / Local / Monitoring panel |
+| `Esc` | Return to overview |
+| `c` | Copy intel (overview: all panels combined; detail: current panel) |
+| `?` | Help overlay |
+| `Ctrl+R` | Clear current panel |
+| `q` | Quit |
 
-## EVE log file details
+## Configuration (`~/.config/lazyscan/config.toml`)
 
-- **Encoding:** UTF-16LE
-- **macOS path:** `~/Documents/EVE/logs/Chatlogs/`
-- **Linux (Steam+Proton):** `~/.local/share/Steam/steamapps/compatdata/8500/pfx/drive_c/users/steamuser/My Documents/EVE/logs/Chatlogs/`
-- **Line format:** `[ YYYY.MM.DD HH:MM:SS ] CharacterName > message`
-- **System messages:** sender is `EVE System`
-- Reading log files is TOS-safe — CCP writes these files intentionally for
-  third-party tools to consume. No cache scraping or network interception involved.
-
-## TUI layout concept
-
+```toml
+[logs]
+enabled = true
+path = ""                        # optional override; auto-detected if blank
+wh_corps = []                    # extra WH corp name fragments (case-insensitive)
+wh_alliances = []                # extra WH alliance name fragments
 ```
-┌─────────────────────────────────────────────────────────┐
-│  lazyscan  │  [D] D-Scan  [L] Local  [G] Log  [H] Hist  │
-├──────────────────┬──────────────────────────────────────┤
-│  PASTE / INPUT   │  RESULTS                             │
-│                  │                                      │
-│  > ░             │  ⚔  Combat    12  [████████░░] 60%  │
-│                  │  🔍 Recon      3  [███░░░░░░░] 15%  │
-│                  │  ✚  Logi       2  [██░░░░░░░░] 10%  │
-│                  │  📦 Other      3  [███░░░░░░░] 15%  │
-│                  │                                      │
-│                  │  ⚠ NOTABLE HULLS                     │
-│                  │  Loki × 2   Huginn × 1  Sabre × 1   │
-│                  │                                      │
-│                  │  THREAT: HIGH — likely combat fleet  │
-├──────────────────┴──────────────────────────────────────┤
-│  [tab] switch pane  [c] copy  [↑↓] scroll  [q] quit     │
-└─────────────────────────────────────────────────────────┘
-```
+
+Log monitoring is opt-in. Auto-detection covers macOS, Linux native, Steam/Proton,
+and Steam Flatpak paths. `wh_corps`/`wh_alliances` extend (not replace) the built-in
+lists in `zkill.py`.
 
 ## Key decisions
 
-- **Textual over other TUI frameworks** — best Python TUI library, reactive,
-  good async support, active development
-- **uv for package management** — fast, modern, consistent with new projects
-- **No login required for Phase 1 and 2** — ESI and zKillboard are public APIs
-- **ships.json bundled** — avoid network dependency for core D-scan parsing;
-  update script can refresh from SDE periodically
-- **httpx async** — concurrent zKillboard lookups without blocking the TUI
+- **Textual** — best Python TUI library, reactive, good async support
+- **uv** — fast, modern package management
+- **btop-style layout** — overview cards + fullscreen detail, no tabs
+- **No D-scan range filter** — user controls scan range in EVE directly; not our concern
+- **ships.json bundled** — zero network dependency for D-scan; update script in scripts/
+- **httpx async** — concurrent zKillboard lookups without blocking TUI
 - **UTF-16LE log reading** — EVE's non-standard encoding, must be explicit
+- **PyInstaller --onefile** — single executable, no Python required for end users
+- **macOS universal binary** — build x64 (macos-13) and arm64 (macos-latest) separately,
+  combine with `lipo`; triggered on version tags via GitHub Actions
+- **No combat log / intel channel parsing** — out of scope
 
-## Notable ship classes to flag
+## Notable ship classes flagged
 
 Combat recons: Pilgrim, Curse, Huginn, Rapier, Lachesis, Arazu
 Black ops: Redeemer, Sin, Widow, Panther
@@ -124,21 +108,30 @@ Interdictors: Sabre, Flycatcher, Heretic, Eris
 Strategic cruisers: Loki, Tengu, Proteus, Legion
 Covert ops / hunters: Stratios, Astero, Helios, Buzzard, Cheetah, Anathema, Imicus
 
+## Data sources
+
+| Source | Usage | Auth |
+|--------|-------|------|
+| Bundled ships.json | Ship name → class/group lookup | None |
+| ESI /universe/ids/ | Bulk name→ID resolution | None |
+| ESI /characters/{id}/ | Corp and alliance details | None |
+| zKillboard API | Character kill stats | None |
+| ~/Documents/EVE/logs/ | Live log tailing | Local file read |
+
+## EVE log file details
+
+- **Encoding:** UTF-16LE
+- **macOS path:** `~/Documents/EVE/logs/Chatlogs/`
+- **Linux Steam/Proton:** `~/.local/share/Steam/steamapps/compatdata/8500/pfx/drive_c/users/steamuser/My Documents/EVE/logs/Chatlogs/`
+- **Line format:** `[ YYYY.MM.DD HH:MM:SS ] CharacterName > message`
+- **System messages:** sender is `EVE System`
+- Reading log files is TOS-safe — CCP writes these files for third-party consumption.
+
 ## Developer context
 
 - Developer: Scott (mogglemoss on GitHub)
 - Related projects: ShortCircuit (EVE wormhole nav tool, Python/PyQt)
 - EVE character: Cormorant Fell (WiNGSPAN alumni, wormhole space)
-- Repo: github.com/mogglemoss/haruspex (create when ready)
-- Build on MacBook (Cloud-Machine), run alongside EVE client
-
-## Starting point
-
-Begin with Phase 1. Steps:
-1. Set up pyproject.toml with Textual + httpx dependencies via uv
-2. Build ships.json from EVE SDE (Fuzzwork or static dump)
-3. Implement dscan.py parser for raw clipboard text
-4. Build basic Textual app with paste input + results display
-5. Add ship class categorization and threat assessment logic
-6. Add notable hull flagging
-7. Wire up tests with fixture D-scan samples
+- Repo: github.com/mogglemoss/haruspex
+- Build on MacBook, run alongside EVE client
+- v1.0.0 shipped — all three phases complete
