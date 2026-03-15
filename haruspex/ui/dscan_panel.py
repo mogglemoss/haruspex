@@ -5,7 +5,7 @@ from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.containers import Horizontal, Vertical
 from textual.widgets import Label, Static, TextArea
-from haruspex.ui.widgets import PasteArea
+from haruspex.ui.widgets import MASCOT, PasteArea, strip_markup
 
 from haruspex.parsers.dscan import DscanResult, parse
 
@@ -154,6 +154,7 @@ class DscanPanel(Static):
     """
 
     DISCLAIMER = (
+        MASCOT + "\n\n"
         "Deposit scan telemetry in the left pane.\n"
         "HARUSPEX will classify nearby assets and render an operational assessment.\n\n"
         "[dim]TECHNICAL SPECIFICATIONS\n"
@@ -215,4 +216,4 @@ class DscanPanel(Static):
             )
             parts.append(f"notable: {notable_str}")
         parts.append(r.threat)
-        self.app.copy_to_clipboard("  |  ".join(parts))
+        self.app.copy_to_clipboard(strip_markup("  |  ".join(parts)))

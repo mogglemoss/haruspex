@@ -14,6 +14,7 @@ from haruspex.config.settings import Config
 from haruspex.enrichers import esi, zkill
 from haruspex.parsers.logs import LogEvent, tail
 from haruspex.ui.local_panel import _sort_key
+from haruspex.ui.widgets import MASCOT, strip_markup
 
 COLUMNS = ["Name", "Corp", "Alliance", "Kills", "Loss", "K/D", "Risk", "Tags"]
 
@@ -112,6 +113,7 @@ class LogPanel(Static):
     SPINNER = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
 
     LOG_EMPTY = (
+        MASCOT + "\n\n"
         "HARUSPEX is monitoring your local chat log.\n"
         "Pilots who speak in local will be enriched and added to this table.\n\n"
         "[dim]TECHNICAL SPECIFICATIONS\n"
@@ -334,7 +336,7 @@ class LogPanel(Static):
             lines.append("flagged: " + " · ".join(pilot_strs))
         else:
             lines.append("no flagged pilots")
-        self.app.copy_to_clipboard("  |  ".join(lines))
+        self.app.copy_to_clipboard(strip_markup("  |  ".join(lines)))
 
     def on_unmount(self) -> None:
         if self._tail_task:

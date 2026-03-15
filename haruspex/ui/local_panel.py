@@ -8,12 +8,15 @@ from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.containers import Horizontal, Vertical
 from textual.widgets import DataTable, Label, Static, TextArea
-from haruspex.ui.widgets import PasteArea
+from haruspex.ui.widgets import MASCOT, PasteArea, strip_markup
 
 from haruspex.enrichers import esi, zkill
 from haruspex.parsers.local import parse
 
 COLUMNS = ["Name", "Corp", "Alliance", "Kills", "Loss", "K/D", "Risk", "Tags"]
+
+# Session cache: character name → rendered row tuple (persists for app lifetime)
+_SESSION_CACHE: dict[str, tuple] = {}
 
 
 def _system_from_app(app: App) -> str:
@@ -127,6 +130,7 @@ class LocalPanel(Static):
     """
 
     LOCAL_EMPTY = (
+        MASCOT + "\n\n"
         "Deposit a personnel manifest in the left pane.\n"
         "HARUSPEX will resolve each name against the EVE registry "
         "and retrieve public kill records.\n\n"
@@ -213,17 +217,32 @@ class LocalPanel(Static):
         table = self.query_one("#local-table", DataTable)
         table.clear()
         label = self.query_one("#local-results-label", Label)
-        label.update(f"consulting the registry · {len(names)} personnel...")
+
+        cached_rows = [_SESSION_CACHE[n] for n in names if n in _SESSION_CACHE]
+        uncached = [n for n in names if n not in _SESSION_CACHE]
+
+        label.update(
+            f"consulting the registry · {len(uncached)} new · {len(cached_rows)} cached..."
+            if cached_rows else f"consulting the registry · {len(uncached)} personnel..."
+        )
 
         try:
-            char_infos = await esi.enrich_characters(names)
-            char_ids = [c.character_id for c in char_infos if c.character_id]
-            if self._spin_task:
-                self._spin_task.cancel()
-            self._spin_task = asyncio.create_task(self._spinner(f"reviewing incident histories · {len(char_ids)} personnel"))
-            zkill_stats = await zkill.fetch_all(char_ids)
+            rows = list(cached_rows)
 
-            rows = []
+            if uncached:
+                char_infos = await esi.enrich_characters(uncached)
+                char_ids = [c.character_id for c in char_infos if c.character_id]
+                if self._spin_task:
+                    self._spin_task.cancel()
+                self._spin_task = asyncio.create_task(self._spinner(f"reviewing incident histories · {len(char_ids)} personnel"))
+                zkill_stats = await zkill.fetch_all(char_ids)
+            else:
+                char_infos = []
+                zkill_stats = {}
+                if self._spin_task:
+                    self._spin_task.cancel()
+                    self._spin_task = None
+
             for info in char_infos:
                 zs = zkill_stats.get(info.character_id) if info.character_id else None
 
@@ -263,7 +282,7 @@ class LocalPanel(Static):
                     else info.alliance_name or "-"
                 )
 
-                rows.append((
+                row = (
                     info.name,
                     corp_display,
                     alliance_display,
@@ -272,7 +291,9 @@ class LocalPanel(Static):
                     kd,
                     danger,
                     " ".join(tags) if tags else "-",
-                ))
+                )
+                _SESSION_CACHE[info.name] = row
+                rows.append(row)
 
             self._rows = rows
             self._render_rows()
@@ -321,4 +342,4 @@ class LocalPanel(Static):
             lines.append("flagged: " + " · ".join(pilot_strs))
         else:
             lines.append("no flagged pilots")
-        self.app.copy_to_clipboard("  |  ".join(lines))
+        self.app.copy_to_clipboard(strip_markup("  |  ".join(lines)))

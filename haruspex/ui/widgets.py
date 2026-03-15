@@ -1,8 +1,27 @@
 """Shared UI widgets."""
 from __future__ import annotations
 
+import re
+
 from textual import events
 from textual.widgets import TextArea
+
+# Anglerfish mascot — lure glows in rust, eye in warm white, body in muted
+MASCOT = (
+    "      [#C15F3C]·[/#C15F3C]\n"
+    "      [#C15F3C]│[/#C15F3C]\n"
+    "  [#7a756e]╭───[/#7a756e][#C15F3C]●[/#C15F3C][#7a756e]──╮[/#7a756e]\n"
+    " [#7a756e](│  [/#7a756e][#e8e6e3]◉[/#e8e6e3][#7a756e]   │)──[/#7a756e]\n"
+    "  [#7a756e]╰───────╯[/#7a756e]\n"
+    "  [dim]≈ ≈ ≈ ≈[/dim]"
+)
+
+_MARKUP_RE = re.compile(r"\[/?[^\[\]]*\]")
+
+
+def strip_markup(text: str) -> str:
+    """Remove Textual/Rich markup tags from a string."""
+    return _MARKUP_RE.sub("", text)
 
 
 class PasteArea(TextArea):
