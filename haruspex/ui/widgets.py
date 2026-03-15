@@ -38,11 +38,21 @@ _ESCA_FRAMES = [
 
 
 def _mascot_header(esca_color: str) -> str:
-    """Compact 3-line mascot for the header."""
+    """Compact 3-line robot-head mascot.
+
+    Antenna blinks (esca_color cycles). ( ) are ear-muffs on the face line,
+    ╭──╮ is the top of the head, ◉ is the eye.
+
+         ·          ← antenna tip       (pos 5)
+     ╭───●───╮      ← head top + glow   (● at pos 5)
+    (│   ◉   │)     ← face + ears       (◉ at pos 5)
+
+    All lines left-aligned so positions are consistent.
+    """
     return (
-        f"   [bold {esca_color}]·[/bold {esca_color}]\n"
-        f" [#7a756e]╭──[/#7a756e][{esca_color}]●[/{esca_color}][#7a756e]──╮[/#7a756e]\n"
-        f"[#7a756e]([/#7a756e][#7a756e]│[/#7a756e] [#e8e6e3]◉[/#e8e6e3][#7a756e]  │)─[/#7a756e]"
+        f"     [bold {esca_color}]·[/bold {esca_color}]\n"
+        f" [#7a756e]╭───[/#7a756e][{esca_color}]●[/{esca_color}][#7a756e]───╮[/#7a756e]\n"
+        f"[#7a756e]([/#7a756e][#7a756e]│   [/#7a756e][#e8e6e3]◉[/#e8e6e3][#7a756e]   │)[/#7a756e]"
     )
 
 
@@ -75,10 +85,17 @@ class HaruspexHeader(Horizontal):
         content-align: left middle;
     }
 
+    #header-system {
+        height: 1;
+        text-align: center;
+        color: #C15F3C;
+        text-style: bold;
+    }
+
     #header-mascot {
-        width: 12;
+        width: 13;
         height: 3;
-        content-align: right top;
+        content-align: left top;
     }
     """
 
@@ -86,6 +103,7 @@ class HaruspexHeader(Horizontal):
         with Vertical(id="header-titles"):
             yield Static("HARUSPEX", id="header-title")
             yield Static("", id="header-subtitle")
+            yield Static("", id="header-system")
         yield Static(_mascot_header(_ESCA_FRAMES[0]), id="header-mascot")
 
     def on_mount(self) -> None:
@@ -96,7 +114,16 @@ class HaruspexHeader(Horizontal):
 
     def _refresh_subtitle(self, value: str = "") -> None:
         sub = self.app.sub_title
-        self.query_one("#header-subtitle", Static).update(sub)
+        # Default subtitle contains "DSS-T3"; system-detected has one · separator
+        if "DSS-T3" in sub or "·" not in sub:
+            self.query_one("#header-subtitle", Static).update(sub)
+            self.query_one("#header-system", Static).update("")
+        else:
+            platform, system = sub.rsplit("·", 1)
+            self.query_one("#header-subtitle", Static).update(platform.strip())
+            self.query_one("#header-system", Static).update(
+                f"[bold #C15F3C]{system.strip().upper()}[/bold #C15F3C]"
+            )
 
     def _tick_esca(self) -> None:
         self._esca_frame = (self._esca_frame + 1) % len(_ESCA_FRAMES)

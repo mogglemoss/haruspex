@@ -157,7 +157,6 @@ class DscanPanel(Static):
     """
 
     DISCLAIMER = (
-        MASCOT + "\n\n"
         "Deposit scan telemetry in the left pane.\n"
         "HARUSPEX will classify nearby assets and render an operational assessment.\n\n"
         "[dim]TECHNICAL SPECIFICATIONS\n"

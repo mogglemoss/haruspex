@@ -132,7 +132,6 @@ class LocalPanel(Static):
     """
 
     LOCAL_EMPTY = (
-        MASCOT + "\n\n"
         "Deposit a personnel manifest in the left pane.\n"
         "HARUSPEX will resolve each name against the EVE registry "
         "and retrieve public kill records.\n\n"

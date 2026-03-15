@@ -116,7 +116,6 @@ class LogPanel(Static):
     SPINNER = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
 
     LOG_EMPTY = (
-        MASCOT + "\n\n"
         "HARUSPEX is monitoring your local chat log.\n"
         "Pilots who speak in local will be enriched and added to this table.\n\n"
         "[dim]TECHNICAL SPECIFICATIONS\n"
