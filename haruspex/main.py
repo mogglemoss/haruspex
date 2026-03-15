@@ -100,7 +100,7 @@ class LazyScanApp(App):
         Binding("d", "focus_panel('dscan')", "D-Scan", show=True, priority=True),
         Binding("l", "focus_panel('local')", "Local", show=True, priority=True),
         Binding("m", "focus_panel('log')", "Monitoring", show=True, priority=True),
-        Binding("escape", "exit_fullscreen", "Overview", show=False, priority=True),
+        Binding("escape", "exit_fullscreen", "Overview", show=True, priority=True),
         Binding("q", "quit", "Quit", show=True),
     ]
 
@@ -122,6 +122,11 @@ class LazyScanApp(App):
             self._set_overview()
         else:
             self._set_fullscreen(panel_id)
+
+    def check_action(self, action: str, parameters: tuple) -> bool | None:
+        if action == "exit_fullscreen":
+            return True if self._fullscreen else None  # None = hide from footer
+        return True
 
     def action_exit_fullscreen(self) -> None:
         if self._fullscreen:

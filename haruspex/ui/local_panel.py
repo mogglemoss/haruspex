@@ -74,6 +74,10 @@ class LocalPanel(Static):
         margin: 1;
     }
 
+    LocalPanel.overview:hover {
+        border: round #C15F3C;
+    }
+
     #local-summary {
         height: 1fr;
         color: #7a756e;
@@ -181,6 +185,10 @@ class LocalPanel(Static):
                 yield Label("personnel assessment", id="local-results-label")
                 yield Static(self.LOCAL_EMPTY, id="local-empty-state")
                 yield DataTable(id="local-table", zebra_stripes=True, cursor_type="row")
+
+    def on_click(self) -> None:
+        if self.has_class("overview"):
+            self.app.action_focus_panel("local")
 
     def on_mount(self) -> None:
         self._rows: list[tuple] = []

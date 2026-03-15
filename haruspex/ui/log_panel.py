@@ -50,6 +50,10 @@ class LogPanel(Static):
         margin: 1;
     }
 
+    LogPanel.overview:hover {
+        border: round #C15F3C;
+    }
+
     #log-summary {
         height: 1fr;
         color: #7a756e;
@@ -160,6 +164,10 @@ class LogPanel(Static):
                 yield Label("personnel assessment", id="log-results-label")
                 yield Static(self.LOG_EMPTY, id="log-empty-state")
                 yield DataTable(id="log-table", zebra_stripes=True, cursor_type="row")
+
+    def on_click(self) -> None:
+        if self.has_class("overview"):
+            self.app.action_focus_panel("log")
 
     def on_mount(self) -> None:
         self._rows: dict[str, tuple] = {}

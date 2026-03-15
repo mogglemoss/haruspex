@@ -129,6 +129,10 @@ class DscanPanel(Static):
         margin: 1;
     }
 
+    DscanPanel.overview:hover {
+        border: round #C15F3C;
+    }
+
     #dscan-summary {
         height: 1fr;
         color: #7a756e;
@@ -202,6 +206,10 @@ class DscanPanel(Static):
             with Vertical(id="results-pane"):
                 yield Label("proximity assessment", id="results-label")
                 yield Static(self.DISCLAIMER, id="results-content")
+
+    def on_click(self) -> None:
+        if self.has_class("overview"):
+            self.app.action_focus_panel("dscan")
 
     def on_mount(self) -> None:
         self._last_result: DscanResult | None = None
