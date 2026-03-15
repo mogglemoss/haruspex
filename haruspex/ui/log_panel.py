@@ -99,7 +99,7 @@ class LogPanel(Static):
     }
 
     DataTable > .datatable--header {
-        color: #7a756e;
+        color: #a09890;
         background: #201d18;
     }
 
@@ -352,17 +352,17 @@ class LogPanel(Static):
         if zs and zs.dangerous:
             danger = "[bold red]☠[/bold red]"
         elif danger_pct >= 30:
-            danger = f"[yellow]{danger_pct}%[/yellow]"
+            danger = f"[#e8a559]{danger_pct}%[/#e8a559]"
         else:
             danger = f"{danger_pct}%"
 
         tags: list[str] = []
         if is_wingspan(info.corp_name, info.alliance_name):
-            tags.append("[magenta]WINGSPAN[/magenta]")
+            tags.append("[#c47ab4]WINGSPAN[/#c47ab4]")
         elif is_wh_corp(info.corp_name):
-            tags.append("[cyan]WH[/cyan]")
+            tags.append("[#4ec9c4]WH[/#4ec9c4]")
         elif is_wh_alliance(info.alliance_name):
-            tags.append("[cyan]WH[/cyan]")
+            tags.append("[#4ec9c4]WH[/#4ec9c4]")
 
         corp_display = (
             f"[{info.corp_ticker}] {info.corp_name}" if info.corp_ticker

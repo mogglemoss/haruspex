@@ -83,6 +83,21 @@ class LazyScanApp(App):
         border: round $warm-border;
     }
 
+    /* Warm scrollbars — Textual defaults to blue */
+    * {
+        scrollbar-color: #5a5550;
+        scrollbar-background: #1a1815;
+        scrollbar-color-hover: #C15F3C;
+        scrollbar-background-hover: #1a1815;
+        scrollbar-color-active: #C15F3C;
+        scrollbar-background-active: #1a1815;
+    }
+
+    /* DataTable hover row — applies across all panels */
+    DataTable > .datatable--hover {
+        background: #C15F3C 10%;
+    }
+
     /* PasteArea — suppress TextArea's blue cursor and selection */
     PasteArea > .text-area--cursor {
         background: $warm-border;

@@ -47,8 +47,8 @@ def _render_result(result: DscanResult) -> str:
     lines: list[str] = []
 
     lines.append(
-        f"[dim]{result.total_objects} objects[/dim]  "
-        f"[bold]{result.total_ships}[/bold] [dim]ships[/dim]"
+        f"[#7a756e]{result.total_objects} objects[/#7a756e]  "
+        f"[bold]{result.total_ships}[/bold] [#9a9590]ships[/#9a9590]"
     )
     lines.append("")
 
@@ -58,7 +58,7 @@ def _render_result(result: DscanResult) -> str:
         if count == 0:
             continue
         pct = result.pct(cls)
-        lines.append(f"  {label:<14}  [bold]{count:>3}[/bold]  {_bar(pct)}  [dim]{pct:>3}%[/dim]")
+        lines.append(f"  {label:<14}  [bold]{count:>3}[/bold]  {_bar(pct)}  [#9a9590]{pct:>3}%[/#9a9590]")
 
     lines.append("")
 
@@ -78,32 +78,32 @@ def _render_result(result: DscanResult) -> str:
     ]
     shown = [(count, label) for count, label in non_ship if count > 0]
     if shown:
-        lines.append("[dim]── field conditions ────────────────────[/dim]")
+        lines.append("[#3a3530]── field conditions ────────────────────[/#3a3530]")
         for count, label in shown:
-            hint = "  [dim](evidence of prior engagement)[/dim]" if "Wreck" in label else ""
+            hint = "  [#7a756e](evidence of prior engagement)[/#7a756e]" if "Wreck" in label else ""
             if "Deployable" in label:
-                hint = "  [dim](temporary infrastructure)[/dim]"
+                hint = "  [#7a756e](temporary infrastructure)[/#7a756e]"
             if "Combat Probe" in label:
-                hint = "  [dim](active hunter)[/dim]"
+                hint = "  [#e8a559](active hunter)[/#e8a559]"
             if "Core Probe" in label:
-                hint = "  [dim](scanning activity)[/dim]"
+                hint = "  [#7a756e](scanning activity)[/#7a756e]"
             lines.append(f"  {label:<14}  [bold]{count:>3}[/bold]{hint}")
         lines.append("")
 
     lines.append("")
 
     if result.notable:
-        lines.append("[dim]── persons of interest ────────────────[/dim]")
+        lines.append("[#3a3530]── persons of interest ────────────────[/#3a3530]")
         parts = []
         for hull, count in sorted(result.notable.items()):
-            parts.append(f"[#C15F3C]{hull}[/#C15F3C]" + (f" [dim]×{count}[/dim]" if count > 1 else ""))
+            parts.append(f"[#C15F3C]{hull}[/#C15F3C]" + (f" [#7a756e]×{count}[/#7a756e]" if count > 1 else ""))
         lines.append("  " + "  ·  ".join(parts))
         lines.append("")
 
-    lines.append("[dim]── operational assessment ──────────────[/dim]")
+    lines.append("[#3a3530]── operational assessment ──────────────[/#3a3530]")
     for severity, label, text in result.assessments:
         color = _SEVERITY_COLOR.get(severity, "#e8a559")
-        lines.append(f"  [dim]{label}[/dim]  [{color}]{text}[/{color}]")
+        lines.append(f"  [#7a756e]{label}[/#7a756e]  [{color}]{text}[/{color}]")
 
     return "\n".join(lines)
 
@@ -172,6 +172,11 @@ class DscanPanel(Static):
         color: #C15F3C;
         text-style: bold;
         margin-bottom: 1;
+    }
+
+    DataTable > .datatable--header {
+        color: #a09890;
+        background: #201d18;
     }
     """
 
