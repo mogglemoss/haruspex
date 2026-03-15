@@ -41,7 +41,7 @@ Pre-compiled binaries are available on the [Releases page](https://github.com/mo
 
 ```bash
 git clone https://github.com/mogglemoss/haruspex
-cd lazyscan
+cd haruspex
 uv sync
 uv run haruspex
 ```
@@ -52,7 +52,7 @@ uv run haruspex
 
 HARUSPEX requires no configuration for D-Scan and Local. It knows what it needs to know. Live log monitoring is opt-in, on the reasonable grounds that reading your files without permission would be rude.
 
-Create `~/.config/lazyscan/config.toml` to enable it:
+Create `~/.config/haruspex/config.toml` to enable it:
 
 ```toml
 [logs]

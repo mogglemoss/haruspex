@@ -215,7 +215,7 @@ class LogPanel(Static):
             text = (
                 "[#e8a559]MONITORING DISABLED.[/#e8a559]\n"
                 "Log tailing is not enabled.\n\n"
-                "[#7a756e]~/.config/lazyscan/config.toml[/#7a756e]"
+                "[#7a756e]~/.config/haruspex/config.toml[/#7a756e]"
             )
         elif not self._rows:
             self.border_title = "[m] MONITORING"
@@ -293,7 +293,7 @@ class LogPanel(Static):
                 "[red]log directory not found[/red]"
             )
             self.query_one("#enable-hint", Static).update(
-                "Specify log_path in\n[#7a756e]~/.config/lazyscan/config.toml[/#7a756e]"
+                "Specify log_path in\n[#7a756e]~/.config/haruspex/config.toml[/#7a756e]"
             )
             self._refresh_summary()
             return
@@ -315,13 +315,13 @@ class LogPanel(Static):
                 "LOG MONITORING IS APPROVED FOR CAPSULEER USE. "
                 "CCP WRITES THESE FILES FOR THIRD-PARTY CONSUMPTION. "
                 "HARUSPEX IS A THIRD PARTY.\n\n"
-                "To enable, add to\n[#7a756e]~/.config/lazyscan/config.toml[/#7a756e]:\n\n"
+                "To enable, add to\n[#7a756e]~/.config/haruspex/config.toml[/#7a756e]:\n\n"
                 "[bold][logs]\nenabled = true[/bold]"
             )
         else:
             self.query_one("#enable-hint", Static).update(
                 "No EVE log directory detected.\n\n"
-                "Set path manually in\n[#7a756e]~/.config/lazyscan/config.toml[/#7a756e]"
+                "Set path manually in\n[#7a756e]~/.config/haruspex/config.toml[/#7a756e]"
             )
 
     def _start_tail(self, log_path: Path) -> None:

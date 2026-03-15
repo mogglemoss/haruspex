@@ -1,4 +1,4 @@
-"""lazyscan — EVE Online D-scan and local intel TUI."""
+"""haruspex — EVE Online D-scan and local intel TUI."""
 from __future__ import annotations
 
 from textual import events
@@ -17,7 +17,7 @@ from haruspex.ui.log_panel import LogPanel
 
 
 class LazyScanApp(App):
-    """Main lazyscan application."""
+    """Main haruspex application."""
 
     TITLE = "HARUSPEX"
     SUB_TITLE = "Proximity Intelligence Platform · DSS-T3 · Capsuleer Edition"

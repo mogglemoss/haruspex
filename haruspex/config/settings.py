@@ -1,4 +1,4 @@
-"""lazyscan configuration — stored at ~/.config/lazyscan/config.toml."""
+"""haruspex configuration — stored at ~/.config/haruspex/config.toml."""
 from __future__ import annotations
 
 import tomllib
@@ -7,7 +7,7 @@ from pathlib import Path
 
 import tomli_w
 
-CONFIG_DIR = Path.home() / ".config" / "lazyscan"
+CONFIG_DIR = Path.home() / ".config" / "haruspex"
 CONFIG_FILE = CONFIG_DIR / "config.toml"
 
 # Candidate log paths per platform, in priority order

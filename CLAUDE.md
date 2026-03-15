@@ -71,7 +71,7 @@ Each panel has two modes:
 | `Ctrl+R` | Clear current panel |
 | `q` | Quit |
 
-## Configuration (`~/.config/lazyscan/config.toml`)
+## Configuration (`~/.config/haruspex/config.toml`)
 
 ```toml
 [logs]
