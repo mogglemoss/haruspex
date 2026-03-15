@@ -169,6 +169,10 @@ class LogPanel(Static):
         if self.has_class("overview"):
             self.app.action_focus_panel("log")
 
+    def on_resize(self) -> None:
+        if self.has_class("overview"):
+            self._refresh_summary()
+
     def on_mount(self) -> None:
         self._rows: dict[str, tuple] = {}
         table = self.query_one("#log-table", DataTable)
@@ -219,13 +223,24 @@ class LogPanel(Static):
             if flagged:
                 lines.append(f"[bold #ff6b6b]{len(flagged)} flagged[/bold #ff6b6b]")
                 lines.append("")
-                for r in list(flagged)[:4]:
+
+                h = self.size.height
+                usable = (h - 4) if h > 8 else 999
+                header_lines = len(lines)
+                pilot_slots = usable - header_lines
+                need_overflow = len(flagged) > pilot_slots
+                if need_overflow:
+                    pilot_slots -= 1
+
+                for r in list(flagged)[:max(1, pilot_slots)]:
                     name = r[0]
                     risk = r[6]
                     kills = r[3]
                     lines.append(f"  [bold]{name}[/bold]  {risk}  [#7a756e]{kills}k[/#7a756e]")
-                if len(flagged) > 4:
-                    lines.append(f"  [#7a756e]… and {len(flagged) - 4} more[/#7a756e]")
+
+                remaining = len(flagged) - min(len(flagged), max(1, pilot_slots))
+                if remaining > 0:
+                    lines.append(f"  [#7a756e]… and {remaining} more[/#7a756e]")
             else:
                 lines.append("[#7a756e]no flagged pilots[/#7a756e]")
             text = "\n".join(lines)

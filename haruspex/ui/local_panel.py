@@ -190,6 +190,10 @@ class LocalPanel(Static):
         if self.has_class("overview"):
             self.app.action_focus_panel("local")
 
+    def on_resize(self) -> None:
+        if self.has_class("overview"):
+            self._refresh_summary()
+
     def on_mount(self) -> None:
         self._rows: list[tuple] = []
         self._sort_col: int = 6   # default: Risk
@@ -239,14 +243,29 @@ class LocalPanel(Static):
         lines = [f"[bold]{count}[/bold] [#9a9590]pilots on record[/#9a9590]"]
 
         if flagged:
-            lines.append(f"[red]{len(flagged)} flagged[/red]")
+            lines.append(f"[bold #ff6b6b]{len(flagged)} flagged[/bold #ff6b6b]")
             lines.append("")
-            for r in flagged[:5]:
+
+            # Dynamically fill available vertical space.
+            # self.size.height is outer height; subtract border (2) + padding (2).
+            # Header above pilot list = lines so far (count + flagged + blank = 3).
+            # Fall back to large number when not yet laid out (size = 0).
+            h = self.size.height
+            usable = (h - 4) if h > 8 else 999
+            header_lines = len(lines)  # lines emitted so far
+            pilot_slots = usable - header_lines
+            need_overflow = len(flagged) > pilot_slots
+            if need_overflow:
+                pilot_slots -= 1  # reserve one line for the overflow indicator
+
+            for r in flagged[:max(1, pilot_slots)]:
                 name, _, _, kills, _, _, risk, tags = r
                 tag_str = f"  [{strip_markup(tags)}]" if tags != "-" else ""
-                lines.append(f"  [bold]{name}[/bold]{tag_str}  {risk}  [dim]{kills}k[/dim]")
-            if len(flagged) > 5:
-                lines.append(f"  [#7a756e]… and {len(flagged) - 5} more[/#7a756e]")
+                lines.append(f"  [bold]{name}[/bold]{tag_str}  {risk}  [#7a756e]{kills}k[/#7a756e]")
+
+            remaining = len(flagged) - min(len(flagged), max(1, pilot_slots))
+            if remaining > 0:
+                lines.append(f"  [#7a756e]… and {remaining} more[/#7a756e]")
         else:
             lines.append("[#7a756e]no flagged pilots[/#7a756e]")
 
