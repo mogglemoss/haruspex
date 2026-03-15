@@ -20,8 +20,10 @@ COLUMNS = ["Name", "Corp", "Alliance", "Kills", "Loss", "K/D", "Risk", "Tags"]
 
 
 def _risk_val(risk_str: str) -> int:
+    import re
+    clean = re.sub(r"\[/?[^\[\]]*\]", "", risk_str)
     try:
-        return int(risk_str.replace("%", "").strip())
+        return int(clean.replace("%", "").strip())
     except ValueError:
         return 0
 
@@ -31,7 +33,7 @@ class LogPanel(Static):
 
     BINDINGS = [
         Binding("ctrl+t", "toggle_tail", "Toggle tail", show=False, priority=True),
-        Binding("c", "copy_intel", "Copy intel", show=True),
+        Binding("c", "copy_intel", "Copy intel", show=True, priority=True),
         Binding("ctrl+r", "clear_table", "Clear", show=True),
     ]
 
@@ -257,7 +259,7 @@ class LogPanel(Static):
         danger_pct = zs.danger_ratio if zs else 0
 
         if zs and zs.dangerous:
-            danger = "[red]☠ HIGH[/red]"
+            danger = "[bold red]☠[/bold red]"
         elif danger_pct >= 30:
             danger = f"[yellow]{danger_pct}%[/yellow]"
         else:
@@ -325,7 +327,7 @@ class LogPanel(Static):
             system = ""
         flagged = [
             r for r in self._rows.values()
-            if "HIGH" in r[6] or ("%" in r[6] and _risk_val(r[6]) >= 30)
+            if "☠" in r[6] or ("%" in r[6] and _risk_val(r[6]) >= 30)
         ]
         lines = [f"local{' · ' + system if system else ''} · {len(self._rows)} pilots"]
         if flagged:

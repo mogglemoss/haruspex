@@ -1,9 +1,12 @@
 """lazyscan — EVE Online D-scan and local intel TUI."""
 from __future__ import annotations
 
+from textual import events
 from textual.app import App, ComposeResult
 from textual.binding import Binding
-from textual.widgets import Footer, Header, TabbedContent, TabPane
+from textual.widgets import Footer, TabbedContent, TabPane
+
+from haruspex.ui.widgets import HaruspexHeader, PasteArea
 
 from haruspex.config.settings import Config
 from haruspex.ui.dscan_panel import DscanPanel
@@ -31,12 +34,6 @@ class LazyScanApp(App):
     Screen {
         background: $warm-bg;
         color: $warm-text;
-    }
-
-    Header {
-        background: $warm-surface;
-        color: $rust;
-        text-style: bold;
     }
 
     Footer {
@@ -74,29 +71,86 @@ class LazyScanApp(App):
         color: $warm-text;
         background: $warm-panel;
     }
+
+    /* Command palette */
+    CommandPalette {
+        background: $warm-surface;
+    }
+    CommandPalette > .command-palette--highlight {
+        color: $rust;
+        text-style: bold;
+    }
+    CommandPalette Input {
+        background: $warm-panel;
+        border: tall $warm-border;
+        color: $warm-text;
+    }
+    CommandPalette Input:focus {
+        border: tall $rust;
+    }
+    CommandPalette OptionList {
+        background: $warm-surface;
+        border: round $warm-border;
+    }
+    CommandPalette OptionList > .option-list--option-highlighted {
+        background: $rust 20%;
+        color: $warm-text;
+    }
+    CommandPalette OptionList > .option-list--option-hover {
+        background: $warm-panel;
+    }
+
+    /* Kill the default blue focus ring on every widget */
+    *:focus {
+        border: round $warm-border;
+    }
+
+    DataTable:focus {
+        border: round $warm-border;
+    }
+
+    /* PasteArea — suppress TextArea's blue cursor and selection */
+    PasteArea > .text-area--cursor {
+        background: $warm-border;
+        color: $warm-text;
+    }
+    PasteArea > .text-area--selection {
+        background: $warm-border 40%;
+    }
+    PasteArea:focus {
+        border: round $warm-border;
+    }
     """
 
     BINDINGS = [
-        Binding("d", "switch_tab('dscan')", "D-Scan", show=True),
-        Binding("l", "switch_tab('local')", "Local", show=True),
-        Binding("g", "switch_tab('log')", "Log", show=True),
+        Binding("d", "switch_tab('dscan')", "D-Scan", show=True, priority=True),
+        Binding("l", "switch_tab('local')", "Local", show=True, priority=True),
+        Binding("m", "switch_tab('log')", "Monitoring", show=True, priority=True),
         Binding("q", "quit", "Quit", show=True),
     ]
 
     def compose(self) -> ComposeResult:
         self._config = Config.load()
-        yield Header()
+        yield HaruspexHeader()
         with TabbedContent(initial="dscan"):
             with TabPane("D-Scan", id="dscan"):
                 yield DscanPanel()
             with TabPane("Local", id="local"):
                 yield LocalPanel()
-            with TabPane("Log", id="log"):
+            with TabPane("Live Monitoring", id="log"):
                 yield LogPanel(config=self._config)
         yield Footer()
 
     def action_switch_tab(self, tab_id: str) -> None:
         self.query_one(TabbedContent).active = tab_id
+
+    def on_paste(self, event: events.Paste) -> None:
+        """Route paste to the active tab's input area."""
+        active = self.query_one(TabbedContent).active
+        target = {"dscan": "#paste-area", "local": "#local-paste-area"}.get(active)
+        if target:
+            self.query_one(target, PasteArea).load_text(event.text.strip())
+            event.stop()
 
 
 def main() -> None:

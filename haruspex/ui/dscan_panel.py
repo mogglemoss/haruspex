@@ -21,17 +21,12 @@ CLASS_DISPLAY = [
     ("other",   "·  Other"),
 ]
 
-THREAT_COLOR = {
-    "Infrastructure detected. No witnesses.":                    "dim",
-    "Scan nominal. Suspiciously quiet.":                         "dim",
-    "Solo operator. Could be bait.":                             "#e8a559",
-    "Small engagement party. Festive.":                          "#e8a559",
-    "Medium gang. Someone has a plan.":                          "#C15F3C",
-    "Medium gang. Sustained engagement capability noted.":       "#C15F3C",
-    "Large gang. Recommend introspection.":                      "#C15F3C",
-    "Large gang with logistics. They intend to stay.":           "red",
-    "Fleet-scale remediation team. HARUSPEX wishes you well.": "red",
-    "Fleet detected. Adjust expectations accordingly.":          "red",
+_SEVERITY_COLOR = {
+    "dim":      "dim",
+    "low":      "#e8a559",
+    "medium":   "#C15F3C",
+    "high":     "red",
+    "critical": "bold red",
 }
 
 
@@ -69,15 +64,17 @@ def _render_result(result: DscanResult) -> str:
 
     # Non-ship entities — only show what's present
     non_ship = [
-        (result.fighters,    "◆  Fighters"),
-        (result.drones,      "·  Drones"),
-        (result.wrecks,      "†  Wrecks"),
-        (result.deployables, "◇  Deployables"),
-        (result.structures,  "▪  Structures"),
-        (result.npcs,        "○  NPCs"),
-        (result.cosmic,      "◉  Cosmic"),
-        (result.celestials,  "·  Celestials"),
-        (result.unknown,     "?  Unknown"),
+        (result.fighters,      "◆  Fighters"),
+        (result.drones,        "·  Drones"),
+        (result.wrecks,        "†  Wrecks"),
+        (result.deployables,   "◇  Deployables"),
+        (result.structures,    "▪  Structures"),
+        (result.npcs,          "○  NPCs"),
+        (result.cosmic,        "◉  Cosmic"),
+        (result.celestials,    "·  Celestials"),
+        (result.combat_probes, "⊕  Combat Probes"),
+        (result.core_probes,   "⊙  Core Probes"),
+        (result.unknown,       "?  Unknown"),
     ]
     shown = [(count, label) for count, label in non_ship if count > 0]
     if shown:
@@ -86,6 +83,10 @@ def _render_result(result: DscanResult) -> str:
             hint = "  [dim](evidence of prior engagement)[/dim]" if "Wreck" in label else ""
             if "Deployable" in label:
                 hint = "  [dim](temporary infrastructure)[/dim]"
+            if "Combat Probe" in label:
+                hint = "  [dim](active hunter)[/dim]"
+            if "Core Probe" in label:
+                hint = "  [dim](scanning activity)[/dim]"
             lines.append(f"  {label:<14}  [bold]{count:>3}[/bold]{hint}")
         lines.append("")
 
@@ -99,9 +100,10 @@ def _render_result(result: DscanResult) -> str:
         lines.append("  " + "  ·  ".join(parts))
         lines.append("")
 
-    color = THREAT_COLOR.get(result.threat, "#e8a559")
     lines.append("[dim]── operational assessment ──────────────[/dim]")
-    lines.append(f"  [{color}]{result.threat}[/{color}]")
+    for severity, label, text in result.assessments:
+        color = _SEVERITY_COLOR.get(severity, "#e8a559")
+        lines.append(f"  [dim]{label}[/dim]  [{color}]{text}[/{color}]")
 
     return "\n".join(lines)
 
@@ -110,8 +112,8 @@ class DscanPanel(Static):
     """D-scan mode: paste input + results."""
 
     BINDINGS = [
-        Binding("c", "copy_result", "Copy intel", show=True),
-        Binding("r", "toggle_range", "On-grid only", show=True),
+        Binding("c", "copy_result", "Copy intel", show=True, priority=True),
+        Binding("r", "toggle_range", "On-grid only", show=True, priority=True),
     ]
 
     DEFAULT_CSS = """
@@ -234,7 +236,8 @@ class DscanPanel(Static):
                 f"{h}" + (f" ×{c}" if c > 1 else "") for h, c in sorted(r.notable.items())
             )
             parts.append(f"notable: {notable_str}")
-        parts.append(r.threat)
+        for _, label, text in r.assessments:
+            parts.append(f"{label}: {text}" if label != "threat" else text)
         self.app.copy_to_clipboard(strip_markup("  |  ".join(parts)))
         label = self.query_one("#results-label", Label)
         original = label.renderable

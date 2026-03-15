@@ -12,6 +12,7 @@ def parse(text: str) -> list[str]:
     - Chat conversation copy (timestamp + name > message — skipped)
     """
     names: list[str] = []
+    seen: set[str] = set()
     for line in text.splitlines():
         # Tab-separated: take only the character name (first column)
         if "\t" in line:
@@ -37,5 +38,7 @@ def parse(text: str) -> list[str]:
         if " > " in name:
             continue
 
-        names.append(name)
+        if name not in seen:
+            seen.add(name)
+            names.append(name)
     return names

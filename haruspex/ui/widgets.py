@@ -3,10 +3,12 @@ from __future__ import annotations
 
 import re
 
-from textual import events
-from textual.widgets import TextArea
+from textual.app import ComposeResult
+from textual.containers import Horizontal, Vertical
+from textual.widgets import Static, TextArea
 
-# Anglerfish mascot — lure glows in rust, eye in warm white, body in muted
+
+# Full mascot — used on empty-state panels
 MASCOT = (
     "      [#C15F3C]·[/#C15F3C]\n"
     "      [#C15F3C]│[/#C15F3C]\n"
@@ -24,23 +26,94 @@ def strip_markup(text: str) -> str:
     return _MARKUP_RE.sub("", text)
 
 
-class PasteArea(TextArea):
-    """TextArea that replaces all content on paste instead of inserting.
+# Esca bioluminescence cycle — slow pulse, brief flare, slow fade
+_ESCA_FRAMES = [
+    "#C15F3C",  # rest
+    "#C15F3C",  # rest
+    "#e8a559",  # flare
+    "#C15F3C",  # rest
+    "#8A3820",  # fade
+    "#C15F3C",  # recover
+]
 
-    Textual calls every _on_paste handler in the MRO, so both this class's
-    handler and TextArea's handler run. We load the new text first and set a
-    flag; the overridden insert() discards the subsequent call from the parent
-    handler so the text isn't doubled.
+
+def _mascot_header(esca_color: str) -> str:
+    """Compact 3-line mascot for the header."""
+    return (
+        f"   [bold {esca_color}]·[/bold {esca_color}]\n"
+        f" [#7a756e]╭──[/#7a756e][{esca_color}]●[/{esca_color}][#7a756e]──╮[/#7a756e]\n"
+        f"[#7a756e]([/#7a756e][#7a756e]│[/#7a756e] [#e8e6e3]◉[/#e8e6e3][#7a756e]  │)─[/#7a756e]"
+    )
+
+
+class HaruspexHeader(Horizontal):
+    """Persistent header with title, subtitle, and animated mascot."""
+
+    DEFAULT_CSS = """
+    HaruspexHeader {
+        height: 3;
+        background: #201d18;
+        padding: 0 2;
+        dock: top;
+    }
+
+    #header-titles {
+        width: 1fr;
+        height: 3;
+    }
+
+    #header-title {
+        color: #C15F3C;
+        text-style: bold;
+        height: 1;
+        content-align: left middle;
+    }
+
+    #header-subtitle {
+        color: #7a756e;
+        height: 1;
+        content-align: left middle;
+    }
+
+    #header-mascot {
+        width: 12;
+        height: 3;
+        content-align: right top;
+    }
     """
 
-    _suppress_next_insert: bool = False
+    def compose(self) -> ComposeResult:
+        with Vertical(id="header-titles"):
+            yield Static("HARUSPEX", id="header-title")
+            yield Static("", id="header-subtitle")
+        yield Static(_mascot_header(_ESCA_FRAMES[0]), id="header-mascot")
 
-    def _on_paste(self, event: events.Paste) -> None:
-        self._suppress_next_insert = True
-        self.load_text(event.text.strip())
+    def on_mount(self) -> None:
+        self._esca_frame = 0
+        self._refresh_subtitle()
+        self.watch(self.app, "sub_title", self._refresh_subtitle)
+        self.set_interval(0.55, self._tick_esca)
 
-    def insert(self, text: str, location=None, *, maintain_selection_offset: bool = True) -> None:
-        if self._suppress_next_insert:
-            self._suppress_next_insert = False
-            return
-        super().insert(text, location, maintain_selection_offset=maintain_selection_offset)
+    def _refresh_subtitle(self, value: str = "") -> None:
+        sub = self.app.sub_title
+        self.query_one("#header-subtitle", Static).update(sub)
+
+    def _tick_esca(self) -> None:
+        self._esca_frame = (self._esca_frame + 1) % len(_ESCA_FRAMES)
+        color = _ESCA_FRAMES[self._esca_frame]
+        self.query_one("#header-mascot", Static).update(_mascot_header(color))
+
+
+class PasteArea(TextArea):
+    """Read-only paste target. Never takes keyboard focus.
+
+    Content is loaded externally via load_text(). The widget exists only to
+    display the pasted content — all key handling and paste routing happens
+    at the app level.
+    """
+
+    can_focus = False
+
+    def _on_paste(self, event) -> None:
+        """Suppress all paste events — content is loaded externally."""
+        event.stop()

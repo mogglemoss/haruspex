@@ -152,7 +152,12 @@ class DscanResult:
     npcs: int = 0
     cosmic: int = 0   # anomalies, signatures, wormholes
     unknown: int = 0
+    core_probes: int = 0
+    combat_probes: int = 0
     threat: str = ""
+    archetype: str = ""
+    # Ordered list of (color, label, text) assessment lines for display
+    assessments: list[tuple[str, str, str]] = field(default_factory=list)
 
     @property
     def total_ships(self) -> int:
@@ -181,7 +186,12 @@ def filter_by_range(result: DscanResult, max_km: float) -> DscanResult:
         _classify(filtered, ships, entry.ship_type)
         if entry.ship_type in NOTABLE_HULLS:
             filtered.notable[entry.ship_type] = filtered.notable.get(entry.ship_type, 0) + 1
+    # Probes are rarely on-grid but are whole-system intel — carry from full scan
+    filtered.core_probes = result.core_probes
+    filtered.combat_probes = result.combat_probes
     filtered.threat = _assess_threat(filtered)
+    filtered.archetype = _detect_archetype(filtered)
+    filtered.assessments = _build_assessments(filtered)
     return filtered
 
 
@@ -210,10 +220,22 @@ def parse(text: str) -> DscanResult:
             result.notable[ship_type] = result.notable.get(ship_type, 0) + 1
 
     result.threat = _assess_threat(result)
+    result.archetype = _detect_archetype(result)
+    result.assessments = _build_assessments(result)
     return result
 
 
 def _classify(result: DscanResult, ships: dict, ship_type: str) -> None:
+    low = ship_type.lower()
+
+    # 0. Probes — intercept before ships.json
+    if "combat scanner probe" in low:
+        result.combat_probes += 1
+        return
+    if "core scanner probe" in low:
+        result.core_probes += 1
+        return
+
     # 1. Known ship/drone from ships.json
     if ship_type in ships:
         cls = ships[ship_type]["class"]
@@ -226,7 +248,7 @@ def _classify(result: DscanResult, ships: dict, ship_type: str) -> None:
         return
 
     # 2. Wreck
-    if "wreck" in ship_type.lower():
+    if "wreck" in low:
         result.wrecks += 1
         return
 
@@ -262,6 +284,71 @@ def _classify(result: DscanResult, ships: dict, ship_type: str) -> None:
     result.unknown += 1
 
 
+def _hull_cats(notable: dict[str, int]) -> dict[str, int]:
+    """Count notable hulls by tactical category."""
+    cats: dict[str, int] = {}
+    for hull, count in notable.items():
+        cat = NOTABLE_HULLS.get(hull, "")
+        if cat:
+            cats[cat] = cats.get(cat, 0) + count
+    return cats
+
+
+def _detect_archetype(r: DscanResult) -> str:
+    total = r.total_ships
+    if total == 0:
+        return ""
+
+    cats = _hull_cats(r.notable)
+    combat  = r.counts.get("combat", 0)
+    recon   = r.counts.get("recon", 0)
+    logi    = r.counts.get("logi", 0)
+    hauler  = r.counts.get("hauler", 0)
+
+    dictor  = cats.get("Interdictor", 0)
+    hic     = cats.get("Heavy Interdictor", 0)
+    blops   = cats.get("Black Ops", 0)
+    t3      = cats.get("Strategic Cruiser", 0)
+    crecon  = cats.get("Combat Recon", 0)
+    covert  = cats.get("Covert Hunter", 0) + cats.get("Covert Ops", 0)
+
+    # Capital escalation — fighters mean a carrier is somewhere
+    if r.fighters > 0:
+        return "Capital escalation"
+
+    # Black ops — very specific hull, high confidence
+    if blops > 0:
+        return "Black ops drop"
+
+    # Gate / pipe camp — tackle + guns
+    if (dictor + hic) >= 1 and combat >= 1:
+        return "Gate camp"
+
+    # WH hunter gang — T3s and/or covert hunters, tight group
+    if (t3 + crecon + covert) >= 2 and total <= 12 and logi == 0:
+        return "WH hunter gang"
+
+    # Solo cloaked hunter
+    if total <= 2 and (t3 + crecon + covert) >= 1:
+        return "Cloaked hunter"
+
+    # Organised brawl — logi on field means they planned this
+    if logi >= 2 and combat >= 4:
+        if recon >= 1:
+            return "Doctrine fleet · ewar wing"
+        return "Doctrine fleet"
+
+    # Nano roam — recons + no logi, small and fast
+    if recon >= 1 and combat >= 2 and logi == 0 and total <= 15:
+        return "Nano roam"
+
+    # PvE — haulers or no tackle/recon present
+    if hauler >= 1 and (dictor + hic + crecon + t3) == 0:
+        return "PvE activity"
+
+    return ""
+
+
 def _assess_threat(r: DscanResult) -> str:
     total = r.total_ships
     logi = r.counts.get("logi", 0)
@@ -285,3 +372,41 @@ def _assess_threat(r: DscanResult) -> str:
     if logi >= 5:
         return "Fleet-scale remediation team. HARUSPEX wishes you well."
     return "Fleet detected. Adjust expectations accordingly."
+
+
+def _build_assessments(r: DscanResult) -> list[tuple[str, str, str]]:
+    """Return ordered (severity, label, text) assessment lines.
+
+    Severity values: 'dim' | 'low' | 'medium' | 'high' | 'critical'
+    Resolved to display colors in the panel.
+    """
+    items: list[tuple[str, str, str]] = []
+
+    # Fleet threat
+    _threat_severity = {
+        "Infrastructure detected. No witnesses.":                   "dim",
+        "Scan nominal. Suspiciously quiet.":                        "dim",
+        "Solo operator. Could be bait.":                            "low",
+        "Small engagement party. Festive.":                         "low",
+        "Medium gang. Someone has a plan.":                         "medium",
+        "Medium gang. Sustained engagement capability noted.":      "medium",
+        "Large gang. Recommend introspection.":                     "medium",
+        "Large gang with logistics. They intend to stay.":          "high",
+        "Fleet-scale remediation team. HARUSPEX wishes you well.":  "high",
+        "Fleet detected. Adjust expectations accordingly.":         "high",
+    }
+    items.append((_threat_severity.get(r.threat, "low"), "threat", r.threat))
+
+    # Fleet archetype
+    if r.archetype:
+        items.append(("medium", "fleet type", r.archetype))
+
+    # Probe intel — independent of ship count, always shown when present
+    if r.combat_probes:
+        n = f" ×{r.combat_probes}" if r.combat_probes > 1 else ""
+        items.append(("high", "combat probes", f"Combat probes on scan{n}. A hunter is active. You may be the target."))
+    if r.core_probes:
+        n = f" ×{r.core_probes}" if r.core_probes > 1 else ""
+        items.append(("low", "core probes", f"Core probes on scan{n}. System is being scanned."))
+
+    return items

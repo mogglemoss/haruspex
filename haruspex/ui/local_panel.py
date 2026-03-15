@@ -27,8 +27,9 @@ def _system_from_app(app: App) -> str:
 
 
 def _risk_val(risk_str: str) -> int:
+    clean = re.sub(r"\[/?[^\[\]]*\]", "", risk_str)
     try:
-        return int(risk_str.replace("%", "").strip())
+        return int(clean.replace("%", "").strip())
     except ValueError:
         return 0
 
@@ -43,8 +44,9 @@ def _sort_key(col: int, row: tuple) -> object:
         try: return float(v)
         except ValueError: return -1.0
     if col == 6:
-        if "HIGH" in v: return 999
-        try: return int(v.replace("%", ""))
+        if "☠" in v: return 999
+        clean = re.sub(r"\[/?[^\[\]]*\]", "", v)
+        try: return int(clean.replace("%", "").strip())
         except ValueError: return 0
     return re.sub(r"\[.*?\]", "", v).lower()
 
@@ -54,7 +56,7 @@ class LocalPanel(Static):
 
     BINDINGS = [
         Binding("ctrl+g", "lookup", "Look up", show=False, priority=True),
-        Binding("c", "copy_intel", "Copy intel", show=True),
+        Binding("c", "copy_intel", "Copy intel", show=True, priority=True),
     ]
 
     SPINNER = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
@@ -255,7 +257,7 @@ class LocalPanel(Static):
                 danger_pct = zs.danger_ratio if zs else 0
 
                 if zs and zs.dangerous:
-                    danger = "[red]☠ HIGH[/red]"
+                    danger = "[bold red]☠[/bold red]"
                 elif danger_pct >= 30:
                     danger = f"[yellow]{danger_pct}%[/yellow]"
                 else:
@@ -331,7 +333,7 @@ class LocalPanel(Static):
         if not self._rows:
             return
         system = _system_from_app(self.app)
-        flagged = [r for r in self._rows if "HIGH" in r[6] or ("%" in r[6] and _risk_val(r[6]) >= 30)]
+        flagged = [r for r in self._rows if "☠" in r[6] or ("%" in r[6] and _risk_val(r[6]) >= 30)]
         lines = [f"local{' · ' + system if system else ''} · {len(self._rows)} pilots"]
         if flagged:
             pilot_strs = []
