@@ -196,6 +196,7 @@ class LocalPanel(Static):
         self._sort_asc: bool = False
         self._lookup_timer = None
         self._lookup_running: bool = False
+        self._lookup_count: int = 0
         self._spin_task = None
         self._spin_i: int = 0
         table = self.query_one("#local-table", DataTable)
@@ -218,6 +219,17 @@ class LocalPanel(Static):
             self._refresh_summary()
 
     def _refresh_summary(self) -> None:
+        if self._lookup_running:
+            text = (
+                f"[#e8a559]ASSESSMENT IN PROGRESS.[/#e8a559]\n"
+                f"HARUSPEX is cross-referencing "
+                f"[bold]{self._lookup_count}[/bold] personnel.\n\n"
+                "[#7a756e]Consulting the registry.\n"
+                "Stand by.[/#7a756e]"
+            )
+            self.query_one("#local-summary", Static).update(text)
+            return
+
         if not self._rows:
             self.query_one("#local-summary", Static).update(self.SUMMARY_EMPTY)
             return
@@ -271,6 +283,8 @@ class LocalPanel(Static):
         if not names:
             return
         self._lookup_running = True
+        self._lookup_count = len(names)
+        self._refresh_summary()
         self._spin_task = asyncio.create_task(self._spinner(f"cross-referencing {len(names)} personnel"))
         asyncio.create_task(self._do_lookup(names))
 
@@ -378,6 +392,7 @@ class LocalPanel(Static):
                 self._spin_task.cancel()
                 self._spin_task = None
             self._lookup_running = False
+            self._refresh_summary()
 
     def _render_rows(self) -> None:
         table = self.query_one("#local-table", DataTable)

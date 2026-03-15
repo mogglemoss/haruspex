@@ -15,9 +15,9 @@ BAR_EMPTY = "░"
 
 CLASS_DISPLAY = [
     ("combat",  "▸  Combat"),
-    ("recon",   "◈  Recon"),
+    ("recon",   "◆  Recon"),
     ("logi",    "◎  Logi"),
-    ("hauler",  "▷  Hauler"),
+    ("hauler",  "○  Hauler"),
     ("other",   "·  Other"),
 ]
 
