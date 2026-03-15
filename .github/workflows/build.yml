@@ -39,60 +39,25 @@ jobs:
           name: haruspex-windows
           path: dist/haruspex-windows.exe
 
-  # ── macOS — build Intel and ARM separately, then lipo ───────────────────
-  build-macos-x64:
-    runs-on: macos-12          # Intel runner (macos-13 retired)
-    steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
-        with:
-          python-version: "3.11"
-      - run: uv sync --group dev
-      - run: uv run pyinstaller haruspex.spec
-      - uses: actions/upload-artifact@v4
-        with:
-          name: haruspex-macos-x64
-          path: dist/haruspex
-
-  build-macos-arm64:
-    runs-on: macos-latest      # Apple Silicon runner
-    steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
-        with:
-          python-version: "3.11"
-      - run: uv sync --group dev
-      - run: uv run pyinstaller haruspex.spec
-      - uses: actions/upload-artifact@v4
-        with:
-          name: haruspex-macos-arm64
-          path: dist/haruspex
-
-  build-macos-universal:
-    needs: [build-macos-x64, build-macos-arm64]
+  # ── macOS universal binary (Intel + Apple Silicon) ───────────────────────
+  build-macos:
     runs-on: macos-latest
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
         with:
-          name: haruspex-macos-x64
-          path: dist-x64
-      - uses: actions/download-artifact@v4
-        with:
-          name: haruspex-macos-arm64
-          path: dist-arm64
-      - name: Combine into universal binary
-        run: |
-          chmod +x dist-x64/haruspex dist-arm64/haruspex
-          lipo -create -output haruspex-macos dist-x64/haruspex dist-arm64/haruspex
-          lipo -info haruspex-macos
+          python-version: "3.11"
+      - run: uv sync --group dev
+      - run: uv run pyinstaller haruspex.spec
+      - run: mv dist/haruspex dist/haruspex-macos
       - uses: actions/upload-artifact@v4
         with:
           name: haruspex-macos
-          path: haruspex-macos
+          path: dist/haruspex-macos
 
   # ── Release — only on version tags ──────────────────────────────────────
   release:
-    needs: [build-linux, build-windows, build-macos-universal]
+    needs: [build-linux, build-windows, build-macos]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     permissions:
