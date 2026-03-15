@@ -8,10 +8,10 @@ from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.containers import Horizontal, Vertical
 from textual.widgets import DataTable, Label, Static, TextArea
-from lazyscan.ui.widgets import PasteArea
+from haruspex.ui.widgets import PasteArea
 
-from lazyscan.enrichers import esi, zkill
-from lazyscan.parsers.local import parse
+from haruspex.enrichers import esi, zkill
+from haruspex.parsers.local import parse
 
 COLUMNS = ["Name", "Corp", "Alliance", "Kills", "Loss", "K/D", "Risk", "Tags"]
 

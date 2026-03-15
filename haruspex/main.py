@@ -5,10 +5,10 @@ from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.widgets import Footer, Header, TabbedContent, TabPane
 
-from lazyscan.config.settings import Config
-from lazyscan.ui.dscan_panel import DscanPanel
-from lazyscan.ui.local_panel import LocalPanel
-from lazyscan.ui.log_panel import LogPanel
+from haruspex.config.settings import Config
+from haruspex.ui.dscan_panel import DscanPanel
+from haruspex.ui.local_panel import LocalPanel
+from haruspex.ui.log_panel import LogPanel
 
 
 class LazyScanApp(App):

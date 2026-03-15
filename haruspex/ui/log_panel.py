@@ -10,10 +10,10 @@ from textual.binding import Binding
 from textual.containers import Horizontal, Vertical
 from textual.widgets import DataTable, Label, Static
 
-from lazyscan.config.settings import Config
-from lazyscan.enrichers import esi, zkill
-from lazyscan.parsers.logs import LogEvent, tail
-from lazyscan.ui.local_panel import _sort_key
+from haruspex.config.settings import Config
+from haruspex.enrichers import esi, zkill
+from haruspex.parsers.logs import LogEvent, tail
+from haruspex.ui.local_panel import _sort_key
 
 COLUMNS = ["Name", "Corp", "Alliance", "Kills", "Loss", "K/D", "Risk", "Tags"]
 
@@ -168,7 +168,7 @@ class LogPanel(Static):
         self._start_tail(log_path)
 
     def _show_setup(self, detected: Path | None) -> None:
-        from lazyscan.config.settings import detect_log_path
+        from haruspex.config.settings import detect_log_path
         detected = detected or detect_log_path()
 
         self.query_one("#log-tail-status", Static).update("[dim]standing by[/dim]")
@@ -243,7 +243,7 @@ class LogPanel(Static):
                     self._spin_task = None
 
     def _build_row(self, info, zs) -> tuple:
-        from lazyscan.enrichers.zkill import is_wingspan, is_wh_corp, is_wh_alliance
+        from haruspex.enrichers.zkill import is_wingspan, is_wh_corp, is_wh_alliance
 
         kills = zs.kills if zs else 0
         losses = zs.losses if zs else 0

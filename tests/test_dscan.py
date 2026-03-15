@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from lazyscan.parsers.dscan import parse
+from haruspex.parsers.dscan import parse
 
 FIXTURES = Path(__file__).parent / "fixtures"
 

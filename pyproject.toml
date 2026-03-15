@@ -1,7 +1,7 @@
 [project]
-name = "lazyscan"
+name = "haruspex"
 version = "0.1.0"
-description = "EVE Online D-scan and local intel TUI"
+description = "EVE Online D-scan and local intel TUI — HARUSPEX Proximity Intelligence Platform"
 requires-python = ">=3.11"
 dependencies = [
     "httpx>=0.28.1",
@@ -10,7 +10,7 @@ dependencies = [
 ]
 
 [project.scripts]
-lazyscan = "lazyscan.main:main"
+haruspex = "haruspex.main:main"
 
 [tool.uv]
 package = true

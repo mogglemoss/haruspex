@@ -5,9 +5,9 @@ from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.containers import Horizontal, Vertical
 from textual.widgets import Label, Static, TextArea
-from lazyscan.ui.widgets import PasteArea
+from haruspex.ui.widgets import PasteArea
 
-from lazyscan.parsers.dscan import DscanResult, parse
+from haruspex.parsers.dscan import DscanResult, parse
 
 BAR_WIDTH = 16
 BAR_FULL  = "█"
