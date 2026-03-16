@@ -124,16 +124,16 @@ path = "C:/Users/YourName/Documents/EVE/logs/Chatlogs"
 
 **Log monitoring is TOS-compliant.** CCP writes these files specifically for third-party tool consumption. HARUSPEX is a third party. CCP has not objected to this characterisation. This situation may continue indefinitely.
 
-**Configurable wormhole affiliations** — HARUSPEX ships with a curated list of known wormhole corporations and alliances. You may extend this list at your own discretion and risk:
+**Flagged corporations and alliances** — HARUSPEX ships with a small built-in list of known wormhole-active groups. You may add any corporations or alliances you want highlighted — rivals, locals, groups of interest, entities HARUSPEX should know about for reasons HARUSPEX will not enquire into:
 
 ```toml
 [logs]
 enabled = true
-wh_corps = ["my secret wh corp", "that other group"]
+wh_corps = ["that alliance", "those people from last tuesday"]
 wh_alliances = ["the coalition we don't talk about"]
 ```
 
-Entries are matched as case-insensitive substrings. HARUSPEX does not judge your associations. HARUSPEX has noted them.
+Entries are matched as case-insensitive substrings. They do not have to be wormhole-related. HARUSPEX does not judge your associations. HARUSPEX has noted them.
 
 ---
 
