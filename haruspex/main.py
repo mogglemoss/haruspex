@@ -210,22 +210,6 @@ class LazyScanApp(App):
 
 
 def main() -> None:
-    import multiprocessing
-    import os
-    import sys
-    # PyInstaller --onefile on Linux re-execs via its bootloader, which can
-    # leave fd 0 pointing at something other than the real controlling terminal
-    # even when isatty() returns True. Textual's key input thread never fires.
-    # Force fd 0 to /dev/tty at the OS level so the selector sees real input.
-    if hasattr(sys, "frozen") and sys.platform == "linux":
-        try:
-            tty = os.open("/dev/tty", os.O_RDWR)
-            os.dup2(tty, 0)
-            os.close(tty)
-            sys.stdin = os.fdopen(0, "r")
-            sys.__stdin__ = sys.stdin
-        except OSError:
-            pass
     LazyScanApp().run()
 
 
