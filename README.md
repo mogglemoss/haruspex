@@ -65,30 +65,48 @@ The **overview card** presents a compressed version of the full analysis — bar
 
 Pre-compiled binaries are available on the [Releases page](https://github.com/mogglemoss/haruspex/releases) for macOS (universal), Linux, and Windows. No Python required. No assembly required. No explanation of what a wormhole is required.
 
+Each release ships as an archive containing a `haruspex/` directory. The binary inside is named `haruspex` (or `haruspex.exe` on Windows). The `_internal/` folder next to it contains the bundled runtime — leave it where it is.
+
 ### macOS
 
-Download `haruspex-macos`, then in Terminal:
-
 ```bash
-chmod +x ~/Downloads/haruspex-macos
-xattr -d com.apple.quarantine ~/Downloads/haruspex-macos
-~/Downloads/haruspex-macos
+tar -xzf haruspex-macos.tar.gz
+xattr -dr com.apple.quarantine haruspex/
+./haruspex/haruspex
 ```
 
-`chmod` grants execute permission (required after download). `xattr` clears the Gatekeeper quarantine flag — macOS applies this to all downloaded files; without it the binary will not run. HARUSPEX is not a threat. Gatekeeper has been informed. It remains unconvinced.
+`xattr` clears the Gatekeeper quarantine flag applied to all downloaded files. HARUSPEX is not a threat. Gatekeeper has been informed. It remains unconvinced.
 
-This is a terminal application. Do not double-click it in Finder. It will open as a text file. This is not useful.
+**To install system-wide:**
+
+```bash
+sudo mv haruspex /usr/local/lib/
+sudo ln -s /usr/local/lib/haruspex/haruspex /usr/local/bin/haruspex
+```
+
+Then run `haruspex` from any terminal.
 
 ### Linux
 
 ```bash
-chmod +x haruspex-linux
-./haruspex-linux
+tar -xzf haruspex-linux.tar.gz
+./haruspex/haruspex
 ```
+
+**To install system-wide:**
+
+```bash
+sudo tar -xzf haruspex-linux.tar.gz -C /usr/local/lib
+sudo ln -s /usr/local/lib/haruspex/haruspex /usr/local/bin/haruspex
+```
+
+Then run `haruspex` from any terminal.
 
 ### Windows
 
-Download `haruspex-windows.exe` and run it from a terminal (Command Prompt or PowerShell). Double-clicking may work, but a terminal window is required for the interface to render. If Windows Defender objects, click "More info" → "Run anyway". HARUSPEX has noted this is not an ideal onboarding experience.
+Extract `haruspex-windows.zip`. Run `haruspex\haruspex.exe` from a terminal (Command Prompt or PowerShell). Double-clicking may work, but a terminal window is required for the interface to render. If Windows Defender objects, click "More info" → "Run anyway". HARUSPEX has noted this is not an ideal onboarding experience.
+
+**To install system-wide:** add the extracted `haruspex\` folder to your system PATH. Then run `haruspex` from any terminal.
 
 ---
 
