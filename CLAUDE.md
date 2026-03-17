@@ -10,7 +10,7 @@ enrichment.
 - **TUI framework:** Textual (https://textual.textualize.io)
 - **HTTP:** httpx (async)
 - **Package manager:** uv
-- **Distribution:** PyInstaller (single-file binaries via GitHub Actions)
+- **Distribution:** PyInstaller --onedir (archives via GitHub Actions)
 
 ## Project structure
 
@@ -94,9 +94,9 @@ lists in `zkill.py`.
 - **ships.json bundled** — zero network dependency for D-scan; update script in scripts/
 - **httpx async** — concurrent zKillboard lookups without blocking TUI
 - **UTF-16LE log reading** — EVE's non-standard encoding, must be explicit
-- **PyInstaller --onefile** — single executable, no Python required for end users
-- **macOS universal binary** — build x64 (macos-13) and arm64 (macos-latest) separately,
-  combine with `lipo`; triggered on version tags via GitHub Actions
+- **PyInstaller --onedir** — avoids bootloader re-exec that breaks Textual key input on Linux;
+  ships as tar.gz/zip archive containing `haruspex/` dir; binary symlink-safe on Linux/macOS
+- **macOS universal binary** — single `macos-latest` job with `target_arch="universal2"`
 - **No combat log / intel channel parsing** — out of scope
 
 ## Signals of Interest — flagged hull categories (threat-priority order)
@@ -138,4 +138,4 @@ Exploration frigates: Imicus
 - EVE character: Cormorant Fell (WiNGSPAN alumni, wormhole space)
 - Repo: github.com/mogglemoss/haruspex
 - Build on MacBook, run alongside EVE client
-- v1.0.0 shipped — all three phases complete
+- v1.0.3 shipped — all three phases complete
