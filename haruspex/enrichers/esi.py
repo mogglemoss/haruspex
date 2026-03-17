@@ -47,25 +47,31 @@ async def enrich_characters(names: list[str]) -> list[CharacterInfo]:
         if not name_to_id:
             return list(infos.values())
 
-        # Step 2: character details (corp_id, alliance_id)
-        char_results = await asyncio.gather(
-            *[_get(client, f"{ESI}/characters/{cid}/") for cid in name_to_id.values()],
-            return_exceptions=True,
-        )
+        # Step 2: bulk corp/alliance IDs via /characters/affiliation/ (up to 1000 per POST)
+        id_to_name = {v: k for k, v in name_to_id.items()}
         corp_ids: dict[str, int] = {}
         alliance_ids: dict[str, int] = {}
-        for name, result in zip(name_to_id.keys(), char_results):
-            if isinstance(result, Exception):
-                infos[name].error = str(result)
-                continue
-            corp_id = result.get("corporation_id")
-            alliance_id = result.get("alliance_id")
-            if corp_id:
-                infos[name].corp_id = corp_id
-                corp_ids[name] = corp_id
-            if alliance_id:
-                infos[name].alliance_id = alliance_id
-                alliance_ids[name] = alliance_id
+        for chunk in _chunks(list(name_to_id.values()), 1000):
+            async with sem:
+                r = await client.post(
+                    f"{ESI}/characters/affiliation/",
+                    json=chunk,
+                    timeout=30,
+                )
+                r.raise_for_status()
+                for entry in r.json():
+                    cid = entry.get("character_id")
+                    name = id_to_name.get(cid)
+                    if not name:
+                        continue
+                    corp_id = entry.get("corporation_id")
+                    alliance_id = entry.get("alliance_id")
+                    if corp_id:
+                        infos[name].corp_id = corp_id
+                        corp_ids[name] = corp_id
+                    if alliance_id:
+                        infos[name].alliance_id = alliance_id
+                        alliance_ids[name] = alliance_id
 
         # Step 3: unique corp details
         unique_corps = list(set(corp_ids.values()))

@@ -16,11 +16,11 @@ jobs:
           python-version: "3.11"
       - run: uv sync --group dev
       - run: uv run pyinstaller haruspex.spec
-      - run: mv dist/haruspex dist/haruspex-linux
+      - run: mv dist/haruspex dist/haruspex-${{ github.ref_name }}-linux
       - uses: actions/upload-artifact@v4
         with:
           name: haruspex-linux
-          path: dist/haruspex-linux
+          path: dist/haruspex-${{ github.ref_name }}-linux
 
   # ── Windows ──────────────────────────────────────────────────────────────
   build-windows:
@@ -32,12 +32,12 @@ jobs:
           python-version: "3.11"
       - run: uv sync --group dev
       - run: uv run pyinstaller haruspex.spec
-      - run: mv dist/haruspex.exe dist/haruspex-windows.exe
+      - run: mv dist/haruspex.exe dist/haruspex-${{ github.ref_name }}-windows.exe
         shell: bash
       - uses: actions/upload-artifact@v4
         with:
           name: haruspex-windows
-          path: dist/haruspex-windows.exe
+          path: dist/haruspex-${{ github.ref_name }}-windows.exe
 
   # ── macOS universal binary (Intel + Apple Silicon) ───────────────────────
   build-macos:
@@ -49,11 +49,11 @@ jobs:
           python-version: "3.11"
       - run: uv sync --group dev
       - run: uv run pyinstaller haruspex.spec
-      - run: mv dist/haruspex dist/haruspex-macos
+      - run: mv dist/haruspex dist/haruspex-${{ github.ref_name }}-macos
       - uses: actions/upload-artifact@v4
         with:
           name: haruspex-macos
-          path: dist/haruspex-macos
+          path: dist/haruspex-${{ github.ref_name }}-macos
 
   # ── Release — only on version tags ──────────────────────────────────────
   release:
