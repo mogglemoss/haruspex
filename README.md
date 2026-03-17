@@ -65,7 +65,7 @@ The **overview card** presents a compressed version of the full analysis — bar
 
 Pre-compiled binaries are available on the [Releases page](https://github.com/mogglemoss/haruspex/releases) for macOS (universal), Linux, and Windows. No Python required. No assembly required. No explanation of what a wormhole is required.
 
-Each release ships as an archive containing a `haruspex/` directory. The binary inside is named `haruspex` (or `haruspex.exe` on Windows). The `_internal/` folder next to it contains the bundled runtime — leave it where it is.
+Each release ships as an archive containing a `haruspex/` directory. The binary inside is named `haruspex` (or `haruspex.exe` on Windows). The `_internal/` folder next to it contains the bundled Python runtime — it must stay alongside the binary. You never need to touch it.
 
 ### macOS
 
@@ -107,6 +107,15 @@ Then run `haruspex` from any terminal.
 Extract `haruspex-windows.zip`. Run `haruspex\haruspex.exe` from a terminal (Command Prompt or PowerShell). Double-clicking may work, but a terminal window is required for the interface to render. If Windows Defender objects, click "More info" → "Run anyway". HARUSPEX has noted this is not an ideal onboarding experience.
 
 **To install system-wide:** add the extracted `haruspex\` folder to your system PATH. Then run `haruspex` from any terminal.
+
+### uv tool install
+
+If you have Python 3.11+ and [uv](https://docs.astral.sh/uv/) installed, this is the cleanest option — no archives, no PATH wrangling, and `uv tool upgrade haruspex` to update:
+
+```bash
+uv tool install git+https://github.com/mogglemoss/haruspex
+haruspex
+```
 
 ---
 
