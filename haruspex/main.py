@@ -210,8 +210,22 @@ class LazyScanApp(App):
 
 
 def main() -> None:
+    import multiprocessing
+    import sys
+    # PyInstaller --onefile on Linux rewires stdin during bootloader re-exec,
+    # leaving sys.__stdin__ pointing at a pipe rather than the real TTY.
+    # Textual's LinuxDriver checks isatty() and silently skips key input setup
+    # if stdin isn't a TTY, breaking all keybindings. Reopen /dev/tty directly.
+    if hasattr(sys, "frozen") and not sys.stdin.isatty():
+        try:
+            sys.__stdin__ = open("/dev/tty", "r")
+            sys.stdin = sys.__stdin__
+        except OSError:
+            pass
     LazyScanApp().run()
 
 
 if __name__ == "__main__":
+    import multiprocessing
+    multiprocessing.freeze_support()
     main()
