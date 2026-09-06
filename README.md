@@ -7,7 +7,7 @@
 
 <img src="assets/cormorantfell-portrait.jpeg" width="72" align="right">
 
-> [Cormorant Fell](https://evewho.com/character/93594488) — WiNGSPAN alumni and, on balance, more of a wormhole enthusiast than a wormhole survivor — built this. It works. It has opinions. Some of them are correct.
+> [Cormorant Fell](https://evewho.com/character/93594488) — WiNGSPAN boomerang and, on balance, more of a wormhole enthusiast than a wormhole survivor — built this. It works. It has opinions. Some of them are correct.
 
 **Proximity Intelligence Platform · DSS-T3 · Capsuleer Edition**
 

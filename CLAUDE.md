@@ -135,7 +135,7 @@ Exploration frigates: Imicus
 
 - Developer: Scott (mogglemoss on GitHub)
 - Related projects: ShortCircuit (EVE wormhole nav tool, Python/PyQt)
-- EVE character: Cormorant Fell (WiNGSPAN alumni, wormhole space)
+- EVE character: Cormorant Fell (WiNGSPAN boomerang, wormhole space)
 - Repo: github.com/mogglemoss/haruspex
 - Build on MacBook, run alongside EVE client
 - v1.0.3 shipped — all three phases complete
